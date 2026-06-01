@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Vyzee — A Pitchdeck for Em</title>
+<title>Vyzee — A Conversation with Justin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -1526,6 +1526,144 @@ I need the visual voice in the room before that.</div>
       if (k === 'p') { e.preventDefault(); togglePresent(); }
       else if (k === 's') { e.preventDefault(); toggleSound(); }
       else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { stopPlay(); }
+    });
+  })();
+</script>
+
+<!-- ============ MOBILE OPTIMIZATION ============ -->
+<style>
+  /* ---------- Landscape phones / small viewports: slim the nav so the
+       16:9 slide gets the maximum possible height ---------- */
+  @media (max-width: 860px), (max-height: 560px) {
+    /* shrink the reserved strip + match deck-stage bottom inset */
+    deck-stage { bottom: 72px !important; }
+    .vz-nav {
+      height: 72px;
+      padding: 0 14px;
+      grid-template-columns: 1fr;        /* center the cluster only */
+    }
+    .vz-left, .vz-right { display: none; } /* brand, ticks, icons → gone */
+    .vz-center { justify-content: center; }
+    .vz-cluster {
+      gap: 12px;
+      padding: 8px 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(247,247,247,0.06);
+    }
+    /* keep hit targets ≥ 44px for touch */
+    .vz-btn { width: 50px; height: 50px; }
+    .vz-btn svg { width: 20px; height: 20px; }
+    .vz-readout { min-width: 84px; gap: 6px; }
+    .vz-count { font-size: 16px; }
+    /* tapping a slide on mobile shouldn't fire the desktop hover tilt */
+    .brand-card { transform: none !important; }
+  }
+
+  /* very short landscape (tiny phones): trim a touch more */
+  @media (max-height: 430px) {
+    deck-stage { bottom: 64px !important; }
+    .vz-nav { height: 64px; }
+    .vz-btn { width: 46px; height: 46px; }
+  }
+
+  /* ---------- Portrait phones: a 16:9 deck is unreadable here, so we
+       invite a rotate to landscape with an on-brand prompt ---------- */
+  .vz-rotate {
+    display: none;
+    position: fixed; inset: 0;
+    z-index: 2147483600;
+    flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 40px;
+    background:
+      radial-gradient(circle at 80% 8%, rgba(106,0,255,.30), transparent 36%),
+      radial-gradient(circle at 12% 92%, rgba(0,102,255,.20), transparent 32%),
+      #060606;
+    color: #F7F7F7;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .vz-rotate::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(247,247,247,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(247,247,247,.05) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(circle at 50% 40%, #000, transparent 75%);
+  }
+  .vz-rotate > * { position: relative; z-index: 1; }
+  .vzr-mark {
+    font-family: "Archivo Black", sans-serif;
+    font-size: 26px; letter-spacing: -0.04em; text-transform: uppercase;
+    transform: skewX(-8deg); color: #F7F7F7; margin-bottom: 42px;
+  }
+  .vzr-mark i { font-style: normal; font-size: 11px; color: #CCFF00; }
+  /* rotating phone glyph */
+  .vzr-phone {
+    width: 58px; height: 104px; border-radius: 12px;
+    border: 2.5px solid rgba(247,247,247,0.85);
+    position: relative;
+    margin-bottom: 36px;
+    animation: vzrTilt 2.6s cubic-bezier(0.65,0,0.35,1) infinite;
+  }
+  .vzr-phone::before {
+    content: ""; position: absolute; left: 50%; top: 8px; transform: translateX(-50%);
+    width: 16px; height: 3px; border-radius: 2px; background: rgba(247,247,247,0.55);
+  }
+  .vzr-phone::after {
+    content: ""; position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%);
+    width: 16px; height: 16px; border-radius: 50%; border: 2px solid #CCFF00;
+  }
+  @keyframes vzrTilt {
+    0%, 18% { transform: rotate(0deg); }
+    50%, 78% { transform: rotate(-90deg); }
+    100% { transform: rotate(0deg); }
+  }
+  .vzr-title {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 26px; font-weight: 600; letter-spacing: -0.02em;
+    margin: 0 0 10px;
+  }
+  .vzr-sub {
+    font-size: 13px; line-height: 1.6; letter-spacing: 0.04em;
+    color: rgba(247,247,247,0.6); max-width: 280px; margin: 0 0 30px;
+  }
+  .vzr-anyway {
+    -webkit-appearance: none; appearance: none; cursor: pointer;
+    background: transparent; color: #CCFF00;
+    border: 1px solid rgba(204,255,0,0.45); border-radius: 999px;
+    padding: 12px 22px; min-height: 44px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .vzr-anyway:active { background: rgba(204,255,0,0.10); }
+
+  @media (max-width: 820px) and (orientation: portrait) {
+    body:not(.vz-rotate-dismiss) .vz-rotate { display: flex; }
+  }
+  @media print { .vz-rotate { display: none !important; } }
+</style>
+
+<div class="vz-rotate" id="vzRotate" role="dialog" aria-label="Rotate your device">
+  <div class="vzr-mark">VYZEE<i>™</i></div>
+  <div class="vzr-phone" aria-hidden="true"></div>
+  <h2 class="vzr-title">Turn your phone</h2>
+  <p class="vzr-sub">This deck is built for the wide screen. Rotate to landscape for the full experience.</p>
+  <button class="vzr-anyway" id="vzrAnyway" type="button">View anyway</button>
+</div>
+
+<script>
+  (function () {
+    var btn = document.getElementById('vzrAnyway');
+    if (btn) btn.addEventListener('click', function () {
+      document.body.classList.add('vz-rotate-dismiss');
+      window.dispatchEvent(new Event('resize'));
+    });
+    // if they rotate to landscape, clear the manual dismiss so the prompt
+    // returns next time they go back to portrait
+    window.addEventListener('orientationchange', function () {
+      var portrait = window.matchMedia('(orientation: portrait)').matches;
+      if (!portrait) document.body.classList.remove('vz-rotate-dismiss');
     });
   })();
 </script>

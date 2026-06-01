@@ -1,30 +1,21 @@
-# Vyzee — Pitch for Justin
+# Vyzee Pitch Deck — Vercel Deploy
 
-Static deck. 14 slides + custom premium nav. No build step.
-
-## Deploy to Vercel
-
-**Option A — drag & drop (fastest)**
-1. Go to https://vercel.com/new
-2. Drag this whole `vercel-deploy` folder onto the page.
-3. Deploy. Done — Vercel serves `index.html` at the root.
-
-**Option B — Vercel CLI**
-```bash
-cd vercel-deploy
-npx vercel        # preview deploy
-npx vercel --prod # production deploy
-```
-
-**Option C — Git**
-Push this folder to a GitHub repo, then "Import Project" on Vercel.
-Framework preset: **Other**. Build command: none. Output dir: `.`
+A self-contained slide deck (mobile-optimized). Fonts load from Google Fonts CDN; everything else is local.
 
 ## Files
-- `index.html` — the deck
-- `deck-stage.js` — slide engine (keyboard arrows, thumbnail rail, print)
-- `vercel.json` — static config
+- `index.html` — the deck (renamed from the working file so Vercel serves it at `/`)
+- `deck-stage.js` — slide engine
+- `vercel.json` — clean URLs + no-cache headers
 
-## Controls
-- Arrow keys ← → or the bottom nav buttons
-- Fonts load from Google Fonts CDN (needs internet on first view)
+## Deploy (drag & drop)
+1. Go to **vercel.com/new**.
+2. Drag this whole `vercel-deploy` folder onto the page (or zip it and drop the zip).
+3. No build step, no framework — Vercel serves it as a static site. Click **Deploy**.
+
+Your live URL appears in seconds. Re-drag the folder to update.
+
+## Local preview
+Open `index.html` directly, or run any static server:
+```
+npx serve .
+```

@@ -2,7 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Vyzee — A Conversation with Justin</title>
+<meta name="theme-color" content="#070707" />
+<meta name="description" content="An offer prepared for Justin Mark Garcia — the Creative Director seat at Vyzee, owned end to end. Title, team, equity." />
+<!-- Open Graph / share preview -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Vyzee" />
+<meta property="og:title" content="Become the eye behind us. — An offer for Justin" />
+<meta property="og:description" content="The Creative Director seat at Vyzee, owned end to end. Title, team, equity." />
+<meta property="og:image" content="og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Become the eye behind us. — An offer for Justin" />
+<meta name="twitter:description" content="The Creative Director seat at Vyzee, owned end to end. Title, team, equity." />
+<meta name="twitter:image" content="og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -390,6 +405,7 @@
       </div>
       <div class="stage">
         <div class="eyebrow">AN OFFER · PREPARED 1 JUNE 2026</div>
+        <div class="vz-opens" id="vzOpens" hidden></div>
         <div class="cover-grid" style="margin-top: 28px;">
           <div>
             <h1 class="cover-title">Become the<br/><span class="accent">eye</span> behind<br/><span class="stroke">us.</span></h1>
@@ -501,10 +517,11 @@ they own the equity. Yours stays a line item.</p></div>
       <div class="stage top">
         <div class="eyebrow"><span class="spark"></span>Four years, two paths</div>
         <h2 class="headline" style="font-size: 60px; margin-top: 14px;">What you walk away with, <span class="accent"></span></h2>
-        <div class="vz-pathtoggle" id="vzPathToggle">
-          <button class="vz-path" type="button" data-path="both" aria-pressed="true">Both paths</button>
-          <button class="vz-path vz-path-a" type="button" data-path="a" aria-pressed="false">Path A · Freelance</button>
-          <button class="vz-path vz-path-b" type="button" data-path="b" aria-pressed="false">Path B · Vyzee</button>
+        <div class="vz-pathtoggle" id="vzPathToggle" data-mode="changes">
+          <span class="vz-path-pre">Show me as</span>
+          <button class="vz-path vz-path-a" type="button" data-path="a" aria-pressed="false">Freelance you</button>
+          <button class="vz-path vz-path-b" type="button" data-path="b" aria-pressed="false">CREATIVE‎ DIRECTOR‎ YOU</button>
+          <button class="vz-path" type="button" data-path="both" aria-pressed="true">Both</button>
         </div>
         <table class="cost-table" id="vzCostTable">
           <thead>
@@ -734,7 +751,7 @@ Read it. Question it. Sign it.</p></div>
 I need the visual voice in the room before that.</div>
         </div>
       </div>
-      <div class="footbar"><div>shad@vyzee.ph · The door is open. The clock is gentle.</div><div class="pg">13 / 14</div></div>
+      <div class="footbar"><div>THE DOOR IS ALWAYS OPEN.</div><div class="pg">13 / 14</div></div>
     </div>
   </section>
 
@@ -745,10 +762,20 @@ I need the visual voice in the room before that.</div>
       <div class="stage">
         <div class="close">
           <div class="eyebrow"><span class="spark"></span>One signature</div>
-          <h2 class="close-line">You're the one I want<br/>in this seat. <span class="accent">Not a<br/>placeholder.</span></h2>
+          <h2 class="close-line">Em, you're the one<br/>I want in this seat. <span class="accent"><br/>Not a placeholder.</span></h2>
           <div class="sign">
             <div class="from">Shad — CEO, Vyzee<span>FOUNDER · 1 JUNE 2026</span></div>
             <div class="to">Prepared for<em>Justin Mark Garcia</em></div>
+          </div>
+          <div class="vz-seal" aria-label="30-day exit clause">
+            <div class="vz-seal-ring">
+              <span class="vz-seal-num">30</span>
+              <span class="vz-seal-unit">DAYS</span>
+            </div>
+            <div class="vz-seal-copy">
+              <div class="vz-seal-h">Reversible until it isn't</div>
+              <p>A clean 30-day exit, in writing. The door stays open both ways for the first month.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -757,6 +784,26 @@ I need the visual voice in the room before that.</div>
   </section>
 
 </deck-stage>
+
+<!-- ===== Premium FX layer (boot, vignette, cursor, spine) ===== -->
+<div class="vz-vignette" id="vzVignette" aria-hidden="true"></div>
+<div class="vz-cursor" id="vzCursor" aria-hidden="true"></div>
+
+<!-- vertical movement spine (desktop) -->
+<nav class="vz-spine" id="vzSpine" aria-label="Progress">
+  <span class="vz-spine-rail"></span>
+  <span class="vz-spine-glow" id="vzSpineGlow"></span>
+</nav>
+
+<!-- cinematic boot sequence -->
+<div class="vz-boot" id="vzBoot" role="status" aria-label="Loading">
+  <div class="vz-boot-grid"></div>
+  <div class="vz-boot-core">
+    <div class="vz-boot-mark">VYZEE<i>™</i></div>
+    <div class="vz-boot-bar"><span></span></div>
+    <div class="vz-boot-cap">PREPARED FOR JUSTIN MARK GARCIA</div>
+  </div>
+</div>
 
 <!-- Premium Vyzee control bar -->
 <div class="vz-nav" id="vzNav" aria-hidden="false">
@@ -1191,6 +1238,261 @@ I need the visual voice in the room before that.</div>
   @media (prefers-reduced-motion: reduce) {
     .vz-enter .frame, .vz-enter .runner, .vz-enter .stage > *, .vz-enter .footbar,
     section[data-deck-active], #vzGrain, #vzSweep.is-sweep::before { animation: none !important; }
+  }
+</style>
+
+<style>
+  /* =====================================================================
+     PREMIUM FX LAYER — boot, cursor, vignette, spine, seal, flicker
+     All desktop enhancements degrade gracefully on touch / mobile.
+     ===================================================================== */
+
+  /* ---------- crossfade / dissolve between slides (all nav paths) ---------- */
+  deck-stage > section.vz-enter {
+    animation: vzDissolve 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes vzDissolve {
+    from { opacity: 0; filter: blur(7px) saturate(1.35); }
+    60%  { opacity: 1; }
+    to   { opacity: 1; filter: none; }
+  }
+
+  /* ---------- neon "power-on" flicker on accents each slide ---------- */
+  .vz-enter .accent,
+  .vz-enter .runner .index,
+  .vz-enter .spark { animation: vzIgnite 0.62s steps(1, end) both 0.08s; }
+  @keyframes vzIgnite {
+    0%   { opacity: 0.15; filter: brightness(0.5); }
+    12%  { opacity: 1;    filter: brightness(1.6); }
+    20%  { opacity: 0.35; }
+    30%  { opacity: 1;    filter: brightness(1.4); }
+    46%  { opacity: 0.7; }
+    62%  { opacity: 1;    filter: brightness(1.15); }
+    100% { opacity: 1;    filter: none; }
+  }
+
+  /* ---------- film vignette at the SCREEN edges (over the letterbox) ---------- */
+  .vz-vignette {
+    position: fixed; inset: 0; pointer-events: none; z-index: 2147481500;
+    background:
+      radial-gradient(130% 110% at 50% 50%, transparent 58%, rgba(0,0,0,0.32) 86%, rgba(0,0,0,0.6) 100%);
+    mix-blend-mode: multiply;
+  }
+  @media print { .vz-vignette { display: none !important; } }
+
+  /* ---------- custom neon dot-cursor (fine pointer only) ---------- */
+  .vz-cursor { display: none; }
+  @media (hover: hover) and (pointer: fine) {
+    html.vz-cursor-on, html.vz-cursor-on * { cursor: none !important; }
+    .vz-cursor {
+      display: block; position: fixed; top: 0; left: 0;
+      z-index: 2147483400; pointer-events: none;
+      width: 34px; height: 34px; margin: -17px 0 0 -17px;
+      border: 1.5px solid rgba(204, 255, 0, 0.85);
+      border-radius: 50%;
+      box-shadow: 0 0 14px rgba(204,255,0,0.35), inset 0 0 8px rgba(204,255,0,0.18);
+      transform: translate3d(-100px, -100px, 0) scale(1);
+      transition: width .22s ease, height .22s ease, margin .22s ease,
+                  background .22s ease, border-color .22s ease, opacity .25s ease;
+      will-change: transform;
+    }
+    .vz-cursor::after {
+      content: ""; position: absolute; left: 50%; top: 50%;
+      width: 5px; height: 5px; margin: -2.5px 0 0 -2.5px; border-radius: 50%;
+      background: #CCFF00; box-shadow: 0 0 8px rgba(204,255,0,0.9);
+    }
+    .vz-cursor.is-hot {
+      width: 56px; height: 56px; margin: -28px 0 0 -28px;
+      background: rgba(204,255,0,0.10); border-color: rgba(204,255,0,1);
+    }
+    .vz-cursor.is-down { transform: translate3d(var(--cx,0), var(--cy,0), 0) scale(0.82); }
+  }
+
+  /* ---------- vertical movement spine (right edge, desktop) ---------- */
+  .vz-spine {
+    position: fixed; right: 30px; top: 50%; transform: translateY(-50%);
+    z-index: 2147482000;
+    display: flex; flex-direction: column; align-items: center;
+    width: 22px;
+    opacity: 0; transition: opacity .5s ease .2s;
+  }
+  body.vz-booted .vz-spine { opacity: 1; }
+  .vz-spine-rail {
+    position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; margin-left: -0.5px;
+    background: rgba(247,247,247,0.14);
+  }
+  .vz-spine-glow {
+    position: absolute; left: 50%; top: 0; width: 2px; margin-left: -1px;
+    background: linear-gradient(180deg, #CCFF00, #0066FF);
+    box-shadow: 0 0 10px rgba(204,255,0,0.6);
+    height: 0; transition: height .5s cubic-bezier(0.22,1,0.36,1);
+    border-radius: 2px;
+  }
+  .vz-node {
+    -webkit-appearance: none; appearance: none; border: 0; padding: 0; margin: 0;
+    background: transparent; cursor: pointer;
+    position: relative; z-index: 1;
+    width: 22px; height: 26px; display: grid; place-items: center;
+  }
+  .vz-node i {
+    display: block; width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(247,247,247,0.28);
+    transition: transform .3s cubic-bezier(0.22,1,0.36,1), background .3s ease, box-shadow .3s ease;
+  }
+  .vz-node:hover i { transform: scale(1.5); background: rgba(247,247,247,0.7); }
+  .vz-node.is-past i { background: rgba(204,255,0,0.5); }
+  .vz-node.is-current i {
+    transform: scale(1.9); background: #CCFF00;
+    box-shadow: 0 0 12px rgba(204,255,0,0.95);
+  }
+  .vz-node .vz-node-lbl {
+    position: absolute; right: 28px; top: 50%; transform: translateY(-50%) translateX(6px);
+    white-space: nowrap; font-family: "JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: 0.14em; text-transform: uppercase; color: rgba(247,247,247,0.82);
+    background: rgba(8,8,8,0.92); border: 1px solid rgba(247,247,247,0.12);
+    padding: 6px 10px; border-radius: 8px; opacity: 0; pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  .vz-node:hover .vz-node-lbl { opacity: 1; transform: translateY(-50%) translateX(0); }
+  body.vz-present .vz-spine { opacity: 0 !important; pointer-events: none; }
+  @media (max-width: 1100px), (max-height: 620px) { .vz-spine { display: none; } }
+  @media print { .vz-spine { display: none !important; } }
+
+  /* ---------- "what changes for you" toggle (slide 5) ---------- */
+  .vz-pathtoggle[data-mode="changes"] { align-items: center; gap: 10px; }
+  .vz-path-pre {
+    font-family: "JetBrains Mono", monospace; font-size: 15px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: rgba(247,247,247,0.45); margin-right: 4px;
+  }
+  .cost-table .now, .cost-table .then, .cost-table .delta { transition: opacity .35s ease, color .35s ease; }
+  .vz-numpulse { animation: vzNumPulse 0.6s ease both; }
+  @keyframes vzNumPulse {
+    0% { color: #CCFF00; text-shadow: 0 0 16px rgba(204,255,0,0.7); }
+    100% { text-shadow: none; }
+  }
+
+  /* ---------- reversibility 30-day seal (close slide) ---------- */
+  .vz-seal {
+    margin-top: 40px; display: flex; align-items: center; gap: 26px;
+    max-width: 720px;
+    padding: 22px 28px; border: 1px solid rgba(204,255,0,0.22); border-radius: 18px;
+    background: linear-gradient(120deg, rgba(204,255,0,0.05), rgba(11,11,11,0.2));
+  }
+  .vz-seal-ring {
+    flex-shrink: 0; width: 92px; height: 92px; border-radius: 50%;
+    display: grid; place-items: center; text-align: center;
+    border: 2px solid rgba(204,255,0,0.55);
+    box-shadow: 0 0 0 6px rgba(204,255,0,0.06), inset 0 0 18px rgba(204,255,0,0.12);
+    position: relative;
+  }
+  .vz-seal-ring::before {
+    content: ""; position: absolute; inset: -2px; border-radius: 50%;
+    border: 2px solid transparent; border-top-color: rgba(204,255,0,0.9);
+    animation: vzSealSpin 9s linear infinite;
+  }
+  @keyframes vzSealSpin { to { transform: rotate(360deg); } }
+  .vz-seal-num { font-family: "Archivo Black", sans-serif; font-size: 34px; line-height: 0.9; color: #CCFF00; }
+  .vz-seal-unit { font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: 0.22em; color: rgba(247,247,247,0.6); margin-top: 3px; }
+  .vz-seal-h { font-family: "Space Grotesk", sans-serif; font-weight: 600; font-size: 22px; color: #F7F7F7; margin-bottom: 6px; letter-spacing: -0.01em; }
+  .vz-seal-copy p { margin: 0; font-size: 17px; line-height: 1.55; color: rgba(247,247,247,0.66); max-width: 520px; }
+
+  /* ---------- "you've opened this N times" chip (cover) ---------- */
+  .vz-opens {
+    display: inline-flex; align-items: center; gap: 9px; margin-top: 16px;
+    font-family: "JetBrains Mono", monospace; font-size: 20px; letter-spacing: 0.05em;
+    text-transform: uppercase; color: rgba(247,247,247,0.55);
+    padding: 8px 14px; border: 1px solid rgba(247,247,247,0.12); border-radius: 999px;
+    background: rgba(20,20,20,0.4);
+  }
+  .vz-opens b { color: #CCFF00; font-weight: 700; }
+  .vz-opens .dot { width: 7px; height: 7px; border-radius: 50%; background: #CCFF00; box-shadow: 0 0 8px rgba(204,255,0,0.8); animation: vzPulseDot 2.2s ease-in-out infinite; }
+  @keyframes vzPulseDot { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+  /* ---------- cinematic boot sequence ---------- */
+  .vz-boot {
+    position: fixed; inset: 0; z-index: 2147483500;
+    display: grid; place-items: center; overflow: hidden;
+    background: radial-gradient(120% 90% at 50% 40%, #0d0d11 0%, #08080a 46%, #040405 100%);
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  .vz-boot.is-gone { opacity: 0; visibility: hidden; pointer-events: none; }
+  /* faint neutral grid powering up — no radioactive lime */
+  .vz-boot-grid {
+    position: absolute; inset: -10%;
+    background-image:
+      linear-gradient(rgba(247,247,247,0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(247,247,247,0.045) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(circle at 50% 44%, #000 0%, transparent 58%);
+    mask-image: radial-gradient(circle at 50% 44%, #000 0%, transparent 58%);
+    opacity: 0; transform: scale(1.08);
+    animation: vzBootGrid 2s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  @keyframes vzBootGrid {
+    0%   { opacity: 0; transform: scale(1.08); }
+    60%  { opacity: 1; }
+    100% { opacity: 0.5; transform: scale(1); }
+  }
+  .vz-boot-core { position: relative; z-index: 1; text-align: center; padding: 0 40px; }
+  /* soft, low, cool halo behind the mark — premium, not a lime blast */
+  .vz-boot-core::before {
+    content: ""; position: absolute; left: 50%; top: 42%;
+    width: 520px; height: 360px; transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(204,255,0,0.09), rgba(0,102,255,0.05) 40%, transparent 70%);
+    filter: blur(26px); pointer-events: none;
+    opacity: 0; animation: vzBootGlow 2s ease forwards 0.3s;
+  }
+  @keyframes vzBootGlow { to { opacity: 1; } }
+  .vz-boot-mark {
+    position: relative;
+    font-family: "Archivo Black", sans-serif; font-size: clamp(46px, 11vw, 104px);
+    letter-spacing: -0.04em; text-transform: uppercase; color: #F7F7F7;
+    display: inline-block; line-height: 1;
+    padding: 0.3em 0.14em 0;            /* headroom so the ™ never crops */
+    opacity: 0; filter: blur(14px);
+    transform: skewX(-8deg) translateY(16px);
+    animation: vzBootMark 1.15s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 0.35s;
+  }
+  .vz-boot-mark i {
+    font-style: normal; font-size: 0.2em; color: #CCFF00;
+    vertical-align: top; position: relative; top: 0.15em; margin-left: 0.05em;
+  }
+  @keyframes vzBootMark {
+    0%   { opacity: 0; filter: blur(14px); transform: skewX(-8deg) translateY(16px); }
+    100% { opacity: 1; filter: blur(0);    transform: skewX(-8deg) translateY(0); }
+  }
+  /* refined hairline progress line */
+  .vz-boot-bar {
+    position: relative;
+    width: min(220px, 54vw); height: 1px; margin: 42px auto 0;
+    background: rgba(247,247,247,0.12); overflow: hidden;
+  }
+  .vz-boot-bar span {
+    display: block; height: 100%; width: 0;
+    background: linear-gradient(90deg, rgba(204,255,0,0), #CCFF00);
+    animation: vzBootBar 1.7s cubic-bezier(0.5, 0, 0.1, 1) forwards 0.5s;
+  }
+  @keyframes vzBootBar { to { width: 100%; } }
+  .vz-boot-cap {
+    margin-top: 24px; font-family: "JetBrains Mono", monospace; font-size: 12px;
+    letter-spacing: 0.34em; text-transform: uppercase; color: rgba(247,247,247,0.36);
+    opacity: 0; animation: vzBootCap 0.9s ease forwards 1s;
+  }
+  @keyframes vzBootCap { to { opacity: 1; } }
+  @media print { .vz-boot { display: none !important; } }
+
+  /* ---------- mobile niceties for the new bits ---------- */
+  @media (max-width: 860px), (max-height: 560px) {
+    .vz-vignette { background: radial-gradient(140% 120% at 50% 50%, transparent 64%, rgba(0,0,0,0.45) 100%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vz-boot-grid, .vz-boot-mark, .vz-boot-bar span, .vz-boot-cap,
+    .vz-seal-ring::before, deck-stage > section.vz-enter,
+    .vz-enter .accent, .vz-enter .runner .index, .vz-enter .spark { animation: none !important; }
+    .vz-boot-mark { opacity: 1; filter: none; transform: skewX(-8deg); }
+    .vz-boot-bar span { width: 100%; }
+    .vz-boot-cap { opacity: 1; }
   }
 </style>
 
@@ -1667,5 +1969,6 @@ I need the visual voice in the room before that.</div>
     });
   })();
 </script>
+<script src="vz-fx.js"></script>
 </body>
 </html>

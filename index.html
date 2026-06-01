@@ -1,0 +1,1533 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Vyzee — A Conversation with Justin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Vyzee brand palette */
+    --neon: #CCFF00;
+    --blue: #0066FF;
+    --pink: #FF2D95;
+    --purple: #6A00FF;
+    --ink: #0B0B0B;
+    --ink-2: #050505;
+    --graphite: #171717;
+    --graphite-2: #242424;
+    --cloud: #F7F7F7;
+    --silver: #D9D9D9;
+    --rule: rgba(247,247,247,.18);
+    --rule-2: rgba(247,247,247,.10);
+
+    /* Fonts */
+    --display: "Archivo Black", "Space Grotesk", sans-serif;
+    --sans: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+
+    --pad-x: 96px;
+  }
+
+  html, body { background: #000; margin: 0; }
+  body { font-family: var(--sans); color: var(--cloud); letter-spacing: -0.018em; }
+
+  deck-stage { background: #000; }
+
+  section {
+    background:
+      radial-gradient(circle at 80% 6%, rgba(106,0,255,.34), transparent 30%),
+      radial-gradient(circle at 10% 92%, rgba(0,102,255,.20), transparent 28%),
+      linear-gradient(180deg, #0B0B0B 0%, #0B0B0B 55%, #050505 100%);
+    color: var(--cloud);
+    overflow: hidden;
+    position: relative;
+  }
+  /* grid texture */
+  section::before {
+    content: "";
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(247,247,247,.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(247,247,247,.035) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: linear-gradient(180deg, rgba(0,0,0,.7), transparent 78%);
+    z-index: 0;
+  }
+
+  .frame {
+    position: absolute;
+    inset: 56px var(--pad-x) 52px var(--pad-x);
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+  }
+
+  /* Runner / topbar */
+  .runner {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto;
+    align-items: center;
+    gap: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--rule);
+    text-transform: uppercase;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: 0.06em;
+    color: rgba(247,247,247,.62);
+  }
+  .runner .index { color: var(--neon); font-weight: 700; text-shadow: 0 0 14px rgba(204,255,0,.45); }
+  .runner .mid { color: rgba(247,247,247,.72); }
+  .runner .line {
+    height: 1px;
+    background: linear-gradient(90deg, rgba(204,255,0,.45), rgba(247,247,247,.14) 14%, rgba(247,247,247,.12));
+    position: relative;
+  }
+  .runner .line::before {
+    content: ""; position: absolute; left: 0; top: -1px;
+    width: 52px; height: 3px; border-radius: 2px;
+    background: var(--neon);
+    box-shadow: 0 0 12px rgba(204,255,0,.75);
+  }
+  /* Skewed neon VZ badge — the brand mark, replaces the generic globe */
+  .globe { display: none; }
+  .globe::before {
+    content: "VZ"; position: static; inset: auto; border: none; border-radius: 0;
+    font-family: var(--display); font-size: 16px; letter-spacing: -0.05em; color: var(--ink);
+  }
+  .globe::after { display: none; }
+
+  /* wordmark */
+  .wordmark { font-family: var(--display); font-size: 30px; letter-spacing: -0.04em; text-transform: uppercase; transform: skewX(-8deg); display: inline-block; color: var(--cloud); }
+  .wordmark sup { font-size: 12px; vertical-align: super; margin-left: 2px; color: var(--neon); }
+
+  /* footer */
+  .footbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 24px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(247,247,247,.5);
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+  }
+  .footbar .pg { color: var(--neon); font-weight: 700; }
+
+  .stage { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 36px 0; min-height: 0; }
+  .stage.top { justify-content: flex-start; padding-top: 48px; }
+
+  /* Type helpers */
+  h1, h2, h3, p { margin: 0; font-weight: 400; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: var(--mono);
+    font-size: 24px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--neon);
+    font-weight: 700;
+  }
+  .spark { width: 16px; height: 16px; position: relative; display: inline-block; flex-shrink: 0; }
+  .spark::before, .spark::after { content: ""; position: absolute; background: currentColor; left: 50%; top: 50%; transform: translate(-50%,-50%); }
+  .spark::before { width: 2.5px; height: 16px; }
+  .spark::after { width: 16px; height: 2.5px; }
+
+  .display { font-family: var(--display); text-transform: uppercase; line-height: 0.84; letter-spacing: -0.05em; }
+  .display .accent { color: var(--neon); }
+  .display .stroke { color: transparent; -webkit-text-stroke: 1.5px var(--cloud); }
+  .headline { font-family: var(--display); text-transform: uppercase; line-height: 0.92; letter-spacing: -0.04em; }
+  .headline .accent { color: var(--neon); }
+  .body { font-family: var(--sans); font-size: 30px; line-height: 1.45; color: rgba(247,247,247,.76); font-weight: 400; }
+  .micro { font-family: var(--mono); font-size: 22px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(247,247,247,.5); }
+
+  /* ============ SLIDE 1 — COVER ============ */
+  .cover .stage { justify-content: flex-end; padding-bottom: 0; }
+  .cover-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: end; }
+  .cover .cover-title { font-family: var(--display); font-size: 116px; line-height: 0.84; text-transform: uppercase; letter-spacing: -0.05em; }
+  .cover .cover-title .accent { color: var(--neon); }
+  .cover .cover-title .stroke { color: transparent; -webkit-text-stroke: 1.8px var(--cloud); }
+  .cover .lead { font-family: var(--sans); font-size: 28px; line-height: 1.5; color: rgba(247,247,247,.78); max-width: 720px; margin-top: 32px; }
+  .brand-card {
+    border: 1px solid rgba(204,255,0,.42);
+    background: linear-gradient(135deg, rgba(204,255,0,.98), rgba(204,255,0,.72));
+    color: var(--ink);
+    border-radius: 22px;
+    padding: 40px;
+    min-height: 360px;
+    position: relative;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    box-shadow:
+      0 0 0 1px rgba(204,255,0,.55),
+      0 24px 70px rgba(204,255,0,.30),
+      0 8px 32px rgba(204,255,0,.20),
+      0 50px 150px rgba(204,255,0,.18);
+    animation: vzCardGlow 4.6s ease-in-out infinite;
+  }
+  @keyframes vzCardGlow {
+    0%, 100% { box-shadow: 0 0 0 1px rgba(204,255,0,.5), 0 20px 60px rgba(204,255,0,.22), 0 8px 30px rgba(204,255,0,.16), 0 44px 130px rgba(204,255,0,.14); }
+    50% { box-shadow: 0 0 0 1px rgba(204,255,0,.66), 0 26px 86px rgba(204,255,0,.36), 0 10px 40px rgba(204,255,0,.26), 0 60px 170px rgba(204,255,0,.26); }
+  }
+  .brand-card::after {
+    content: ""; position: absolute; width: 320px; height: 320px; right: -90px; bottom: -110px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(106,0,255,.55), rgba(0,102,255,.32) 44%, transparent 68%);
+    filter: blur(2px);
+  }
+  .brand-card .bc-word { font-family: var(--display); font-size: 96px; letter-spacing: -0.06em; line-height: 0.82; text-transform: uppercase; transform: skewX(-8deg); position: relative; z-index: 1; }
+  .brand-card .bc-word sup { font-size: 18px; vertical-align: super; }
+  .brand-card .bc-tag { margin-top: 16px; font-size: 24px; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase; position: relative; z-index: 1; }
+  .brand-card .bc-small { margin-top: auto; display: flex; align-items: center; gap: 16px; font-size: 24px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; position: relative; z-index: 1; }
+  .monogram { width: 60px; height: 60px; border-radius: 16px; background: var(--ink); color: var(--neon); display: grid; place-items: center; font-family: var(--display); font-size: 26px; letter-spacing: -0.08em; transform: skewX(-6deg); }
+  .cover-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--rule); }
+  .cover-meta .label { font-family: var(--mono); font-size: 18px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(247,247,247,.5); margin-bottom: 10px; }
+  .cover-meta .value { font-family: var(--sans); font-size: 28px; font-weight: 600; color: var(--cloud); }
+  .cover-meta .value.neon { color: var(--neon); }
+
+  /* ============ SLIDE 2 — AGENDA ============ */
+  .agenda-list { display: flex; flex-direction: column; margin-top: 8px; }
+  .agenda-row { display: grid; grid-template-columns: 90px 1fr 1fr; align-items: baseline; padding: 14px 0; border-top: 1px solid var(--rule); gap: 28px; }
+  .agenda-row:last-child { border-bottom: 1px solid var(--rule); }
+  .agenda-row .n { font-family: var(--mono); font-size: 24px; color: var(--neon); font-weight: 700; }
+  .agenda-row .t { font-family: var(--display); font-size: 40px; text-transform: uppercase; letter-spacing: -0.04em; line-height: 1; }
+  .agenda-row .t .accent { color: var(--neon); }
+  .agenda-row .d { font-family: var(--sans); font-size: 24px; color: rgba(247,247,247,.6); padding-left: 16px; line-height: 1.35; }
+
+  /* ============ SLIDE 3 — MIRROR ============ */
+  .mirror-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; margin-top: 32px; align-items: start; }
+  .mirror-lead { font-family: var(--display); font-size: 76px; line-height: 0.92; letter-spacing: -0.045em; text-transform: uppercase; }
+  .mirror-lead .accent { color: var(--neon); }
+  .mirror-points { display: flex; flex-direction: column; gap: 22px; }
+  .mirror-point { display: grid; grid-template-columns: 44px 1fr; gap: 18px; align-items: baseline; font-size: 27px; line-height: 1.4; color: rgba(247,247,247,.82); }
+  .mirror-point .bullet { font-family: var(--mono); font-size: 22px; color: var(--neon); font-weight: 700; }
+
+  /* ============ SLIDE 4 — CEILING ============ */
+  .ceiling { display: grid; grid-template-columns: 1.15fr 1fr; gap: 72px; align-items: stretch; margin-top: 16px; }
+  .ceiling-left .stat { font-family: var(--display); font-size: 320px; line-height: 0.86; color: var(--cloud); letter-spacing: -0.05em; }
+  .ceiling-left .stat .z { color: var(--neon); }
+  .ceiling-left .stat-sub { font-family: var(--sans); font-weight: 600; font-size: 34px; color: var(--neon); margin-top: 12px; line-height: 1.12; text-transform: uppercase; letter-spacing: -0.02em; }
+  .ceiling-right { display: flex; flex-direction: column; justify-content: space-between; gap: 28px; padding-left: 56px; border-left: 1px solid var(--rule); }
+  .ceiling-right .label { font-family: var(--mono); font-size: 20px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--neon); margin-bottom: 12px; font-weight: 700; }
+  .ceiling-right p { font-family: var(--sans); font-size: 26px; line-height: 1.42; color: rgba(247,247,247,.78); }
+
+  /* ============ SLIDE 5 — COST ============ */
+  .cost-table { margin-top: 24px; width: 100%; border-collapse: collapse; }
+  .cost-table th, .cost-table td { padding: 14px 22px; text-align: left; vertical-align: middle; }
+  .cost-table thead th { font-family: var(--mono); font-size: 18px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--neon); border-bottom: 1px solid var(--rule); font-weight: 700; background: rgba(204,255,0,.06); }
+  .cost-table tbody tr { border-bottom: 1px solid var(--rule-2); }
+  .cost-table td.dim-col { font-family: var(--sans); font-weight: 600; font-size: 26px; color: var(--cloud); text-transform: uppercase; letter-spacing: -0.02em; width: 280px; }
+  .cost-table td.now { font-family: var(--sans); font-weight: 500; font-size: 26px; color: rgba(247,247,247,.55); line-height: 1.15; }
+  .cost-table td.then { font-family: var(--sans); font-weight: 600; font-size: 26px; color: var(--cloud); line-height: 1.15; }
+  .cost-table td.delta { font-family: var(--mono); font-size: 22px; color: var(--neon); text-align: right; font-weight: 700; }
+  .cost-total { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding: 22px 28px; border: 1px solid rgba(204,255,0,.4); border-radius: 16px; background: rgba(204,255,0,.05); }
+  .cost-total .label { font-family: var(--mono); font-size: 22px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(247,247,247,.7); font-weight: 700; }
+  .cost-total .figure { font-family: var(--display); font-size: 80px; color: var(--neon); letter-spacing: -0.04em; }
+
+  /* ============ SLIDE 6 — VISION ============ */
+  .vision { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: stretch; margin-top: 12px; }
+  .vision-img {
+    background: linear-gradient(160deg, #171717 0%, #242424 45%, var(--purple) 130%);
+    border: 1px solid var(--rule);
+    border-radius: 20px; position: relative; overflow: hidden;
+    display: flex; align-items: flex-end; padding: 36px; min-height: 540px;
+  }
+  .vision-img::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(circle at 28% 18%, rgba(204,255,0,.20), transparent 46%), radial-gradient(circle at 75% 85%, rgba(0,102,255,.42), transparent 60%); }
+  .vision-img .cap { position: relative; font-family: var(--mono); font-size: 18px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(247,247,247,.62); z-index: 1; }
+  .vision-img .cap em { font-family: var(--sans); font-style: normal; font-weight: 500; font-size: 24px; text-transform: none; letter-spacing: -0.01em; color: var(--cloud); display: block; margin-top: 10px; line-height: 1.3; }
+  .vision-text { display: flex; flex-direction: column; justify-content: center; gap: 24px; }
+  .vision-text h2 { font-family: var(--display); font-size: 72px; line-height: 0.9; letter-spacing: -0.045em; text-transform: uppercase; }
+  .vision-text h2 .accent { color: var(--neon); }
+  .vision-points { display: flex; flex-direction: column; gap: 14px; margin-top: 4px; }
+  .vision-point { display: grid; grid-template-columns: 52px 1fr; gap: 16px; align-items: baseline; }
+  .vision-point .n { font-family: var(--mono); font-size: 20px; color: var(--neon); font-weight: 700; }
+  .vision-point .t { font-family: var(--sans); font-size: 25px; line-height: 1.4; color: rgba(247,247,247,.82); }
+  .vision-point .t b { color: var(--cloud); font-weight: 600; }
+
+  /* ============ SLIDE 7 — ROLE ============ */
+  .role-head { display: grid; grid-template-columns: auto 1fr; gap: 64px; align-items: end; margin-bottom: 48px; }
+  .role-head .title { font-family: var(--display); font-size: 150px; line-height: 0.82; letter-spacing: -0.055em; text-transform: uppercase; }
+  .role-head .title .accent { color: var(--neon); }
+  .role-head .one-liner { font-family: var(--sans); font-size: 28px; line-height: 1.4; color: rgba(247,247,247,.8); border-left: 4px solid var(--neon); padding-left: 26px; }
+  .role-pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .pillar { border: 1px solid var(--rule); padding: 34px 30px 38px; border-radius: 18px; background: rgba(247,247,247,.032); min-height: 300px; display: flex; flex-direction: column; gap: 18px; position: relative; overflow: hidden; }
+  .pillar::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--neon); }
+  .pillar .n { font-family: var(--mono); font-size: 20px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--neon); font-weight: 700; }
+  .pillar h3 { font-family: var(--display); font-size: 38px; line-height: 0.95; letter-spacing: -0.04em; text-transform: uppercase; }
+  .pillar p { font-family: var(--sans); font-size: 24px; line-height: 1.42; color: rgba(247,247,247,.76); }
+
+  /* ============ SLIDE 8 — WEEK ============ */
+  .week-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; margin-top: 16px; align-items: stretch; }
+  .week-list { display: flex; flex-direction: column; }
+  .week-row { display: grid; grid-template-columns: 110px 1fr; gap: 24px; padding: 16px 0; border-top: 1px solid var(--rule); align-items: baseline; }
+  .week-row:last-child { border-bottom: 1px solid var(--rule); }
+  .week-row .day { font-family: var(--mono); font-size: 22px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--neon); font-weight: 700; }
+  .week-row .what { font-family: var(--display); font-size: 34px; line-height: 1; text-transform: uppercase; letter-spacing: -0.04em; }
+  .week-row .what b { color: rgba(247,247,247,.62); font-weight: 400; }
+  .own-card { background: var(--neon); color: var(--ink); padding: 44px; border-radius: 20px; display: flex; flex-direction: column; gap: 22px; justify-content: center; position: relative; overflow: hidden; }
+  .own-card::after { content: ""; position: absolute; width: 280px; height: 280px; right: -90px; bottom: -100px; border-radius: 50%; background: radial-gradient(circle, rgba(106,0,255,.5), rgba(0,102,255,.28) 46%, transparent 70%); }
+  .own-card .label { font-family: var(--mono); font-size: 20px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); font-weight: 700; position: relative; z-index: 1; }
+  .own-card h3 { font-family: var(--display); font-size: 48px; line-height: 0.92; text-transform: uppercase; letter-spacing: -0.045em; position: relative; z-index: 1; }
+  .own-card ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 13px; position: relative; z-index: 1; }
+  .own-card li { font-family: var(--sans); font-size: 24px; font-weight: 500; line-height: 1.35; color: var(--ink); display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: baseline; }
+  .own-card li::before { content: "→"; font-family: var(--mono); font-weight: 700; }
+
+  /* ============ SLIDE 9 — PROOF ============ */
+  .traj-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 28px; }
+  .traj-card { padding: 30px 26px; border: 1px solid var(--rule); background: rgba(247,247,247,.032); border-radius: 18px; display: flex; flex-direction: column; gap: 12px; min-height: 240px; }
+  .traj-card .month { font-family: var(--mono); font-size: 20px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--neon); font-weight: 700; }
+  .traj-card .mrr { font-family: var(--display); font-size: 64px; line-height: 0.9; letter-spacing: -0.05em; }
+  .traj-card .mrr em { font-style: normal; color: var(--neon); font-size: 36px; }
+  .traj-card .desc { font-family: var(--sans); font-size: 22px; line-height: 1.32; color: rgba(247,247,247,.6); margin-top: auto; }
+  .traj-card.spot { background: var(--neon); border-color: var(--neon); }
+  .traj-card.spot .month { color: var(--ink); }
+  .traj-card.spot .mrr { color: var(--ink); }
+  .traj-card.spot .mrr em { color: var(--ink); }
+  .traj-card.spot .desc { color: rgba(11,11,11,.72); }
+  .proof-foot { margin-top: 28px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 44px; padding-top: 24px; border-top: 1px solid var(--rule); }
+  .proof-foot .label { font-family: var(--mono); font-size: 18px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(247,247,247,.5); margin-bottom: 10px; }
+  .proof-foot .value { font-family: var(--sans); font-weight: 600; font-size: 28px; line-height: 1.2; color: var(--cloud); }
+  .proof-foot .value em { font-style: normal; color: var(--neon); }
+
+  /* ============ SLIDE 10 — PROTECTION ============ */
+  .protect-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; margin-top: 16px; }
+  .protect { padding: 26px 30px; border: 1px solid var(--rule); border-radius: 18px; background: rgba(247,247,247,.032); display: flex; flex-direction: column; gap: 12px; }
+  .protect .label { font-family: var(--mono); font-size: 18px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--blue); font-weight: 700; }
+  .protect h3 { font-family: var(--display); font-size: 36px; line-height: 0.95; text-transform: uppercase; letter-spacing: -0.04em; }
+  .protect h3 .accent { color: var(--neon); }
+  .protect p { font-family: var(--sans); font-size: 24px; line-height: 1.4; color: rgba(247,247,247,.76); }
+  .protect-pledge { margin-top: 22px; padding: 26px 36px; background: var(--neon); border-radius: 18px; position: relative; overflow: hidden; }
+  .protect-pledge .label { font-family: var(--mono); font-size: 18px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); margin-bottom: 8px; font-weight: 700; }
+  .protect-pledge p { font-family: var(--sans); font-weight: 600; font-size: 32px; line-height: 1.2; color: var(--ink); letter-spacing: -0.02em; }
+
+  /* ============ SLIDE 11 — EQUITY ============ */
+  .equity-hero { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; margin-top: 8px; }
+  .equity-num { font-family: var(--display); font-size: 480px; line-height: 0.78; letter-spacing: -0.06em; color: var(--neon); }
+  .equity-num .pct { font-size: 200px; vertical-align: 70px; color: var(--cloud); }
+  .equity-side h3 { font-family: var(--display); font-size: 60px; line-height: 0.92; color: var(--cloud); text-transform: uppercase; letter-spacing: -0.045em; }
+  .equity-side h3 .accent { color: var(--neon); }
+  .equity-side p { font-family: var(--sans); font-size: 24px; line-height: 1.45; color: rgba(247,247,247,.76); margin-top: 22px; }
+  .equity-table { margin-top: 28px; }
+  .equity-row { display: grid; grid-template-columns: 1fr auto auto; gap: 28px; padding: 14px 0; border-top: 1px solid var(--rule); align-items: baseline; }
+  .equity-row:last-child { border-bottom: 1px solid var(--rule); }
+  .equity-row .when { font-family: var(--mono); font-size: 20px; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(247,247,247,.55); white-space: nowrap; }
+  .equity-row .vest { font-family: var(--sans); font-weight: 600; font-size: 24px; color: var(--cloud); white-space: nowrap; }
+  .equity-row .val { font-family: var(--display); font-size: 26px; color: var(--neon); text-align: right; letter-spacing: -0.03em; white-space: nowrap; min-width: 130px; }
+  .equity-note { margin-top: 22px; font-family: var(--sans); font-size: 20px; color: rgba(247,247,247,.5); line-height: 1.45; }
+
+  /* ============ SLIDE 12 — OBJECTIONS ============ */
+  .qa-list { margin-top: 12px; display: flex; flex-direction: column; }
+  .qa { padding: 18px 0; border-top: 1px solid var(--rule); display: grid; grid-template-columns: 96px 1fr 1fr; gap: 32px; align-items: baseline; }
+  .qa:last-child { border-bottom: 1px solid var(--rule); }
+  .qa .n { font-family: var(--mono); font-size: 22px; color: var(--neon); letter-spacing: 0.05em; font-weight: 700; }
+  .qa .q { font-family: var(--display); font-size: 30px; line-height: 1.02; color: var(--cloud); text-transform: uppercase; letter-spacing: -0.04em; }
+  .qa .a { font-family: var(--sans); font-size: 24px; line-height: 1.42; color: rgba(247,247,247,.76); }
+  .qa .a b { font-weight: 600; color: var(--neon); }
+
+  /* ============ SLIDE 13 — NEXT STEPS ============ */
+  .week3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: 28px; }
+  .step { border: 1px solid var(--rule); border-radius: 18px; padding: 32px 30px 36px; display: flex; flex-direction: column; gap: 16px; min-height: 380px; background: rgba(247,247,247,.032); position: relative; overflow: hidden; }
+  .step::before { content: ""; position: absolute; left: 0; top: 0; right: 0; height: 5px; background: var(--neon); }
+  .step .when { font-family: var(--mono); font-size: 20px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--neon); font-weight: 700; }
+  .step .big { font-family: var(--display); font-size: 96px; line-height: 0.84; letter-spacing: -0.05em; color: rgba(247,247,247,.14); }
+  .step h3 { font-family: var(--display); font-size: 38px; line-height: 0.95; text-transform: uppercase; letter-spacing: -0.04em; }
+  .step h3 .accent { color: var(--neon); }
+  .step p { font-family: var(--sans); font-size: 24px; line-height: 1.42; color: rgba(247,247,247,.76); }
+  .urgency { margin-top: 24px; padding: 22px 36px; background: var(--pink); color: var(--cloud); display: flex; justify-content: space-between; align-items: center; border-radius: 16px; gap: 32px; }
+  .urgency .l { font-family: var(--mono); font-size: 22px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cloud); flex-shrink: 0; font-weight: 700; }
+  .urgency .r { font-family: var(--sans); font-weight: 600; font-size: 27px; line-height: 1.2; text-align: right; }
+
+  /* ============ SLIDE 14 — CLOSE ============ */
+  .close { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; height: 100%; gap: 40px; }
+  .close-line { font-family: var(--display); font-size: 100px; line-height: 0.9; letter-spacing: -0.05em; text-transform: uppercase; color: var(--cloud); max-width: 1500px; }
+  .close-line .accent { color: var(--neon); }
+  .close-line .stroke { color: transparent; -webkit-text-stroke: 1.8px var(--cloud); }
+  .sign { display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: end; width: 100%; padding-top: 32px; border-top: 1px solid var(--rule); }
+  .sign .from { font-family: var(--sans); font-weight: 600; font-size: 30px; color: var(--cloud); }
+  .sign .from span { display: block; font-family: var(--mono); font-weight: 400; font-size: 18px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(247,247,247,.5); margin-top: 12px; }
+  .sign .to { text-align: right; font-family: var(--mono); font-size: 18px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(247,247,247,.5); }
+  .sign .to em { font-family: var(--sans); font-style: normal; font-weight: 600; font-size: 30px; text-transform: none; letter-spacing: -0.01em; color: var(--neon); display: block; margin-top: 12px; }
+
+</style>
+</head>
+<body>
+
+<script type="application/json" id="speaker-notes">
+[
+"Justin. Before I open this deck — I want you to know I built this for you, not for a thousand prospects with your name swapped in. So please don't read it like a pitch. Read it like a letter. I'll walk us through it slowly. Take a breath. Here we go.",
+"Quick map of where this conversation goes. I won't sell you anything for the first six minutes — I'll just describe where you are. Then we'll look at the ceiling you're already feeling. Then I'll show you what year four looks like if you're with us. Then the role. Then proof, protection, the actual numbers, the questions you're probably holding back, and finally — what would happen if you said yes this week. Seven movements. We won't skip any.",
+"This is the slide I rewrote five times. Because if I get this wrong, nothing else matters. I'm not going to pretend I know everything about your life. But here's what I've watched. You're twenty-something, you shoot well, you edit faster than most people I know, and you've built a small reputation in Manila on real work — not on hype. You're booked, but not booked enough. You're being paid, but not paid like the person actually carrying the visual story. And I think — quietly — you're starting to wonder if freelance is the ceiling or the floor. Tell me if I'm reading this wrong.",
+"Here's the math no one shows freelance creatives. The best month of your life — let's call it ₱80,000 — is a ceiling, not a floor. Because next month, you start at zero again. The client owns the brand. You owned the camera. When the campaign blows up, you get a credit line in the corner. When it fails, you get the blame. You are renting your talent by the hour to people who are building equity with it. That's the trap. And it doesn't get better by working harder inside it — it gets worse, because every great deliverable raises the bar of what they expect for the same fee.",
+"This is the slide that should make you uncomfortable, and I want it to. Look at the right column. Four more years of the freelance loop — and the number at the bottom is what you walk away with: a portfolio. That's it. A portfolio. Compare it to the left column — Vyzee, same four years, same hours, same talent. The delta isn't just money. It's whether anything you build belongs to you when it's done. The status quo is not safe. It is the expensive choice. I'd rather you walk away from Vyzee than walk away from this slide without seeing that.",
+"Okay. Hard part done. Now the part I actually love. May 2030. You're sitting in our Makati studio — which exists because you helped build it. Vyzee has thirty clinics on retainer. Two of them are clients you personally pitched with a reel that converted on the first watch. You have a junior shooter under you. Your 2% is fully vested. You haven't taken a freelance gig in three years and you don't miss them. The work on your wall is yours — credited, owned, compounding. That's the future this deck is asking you to choose. It's specific because it's real.",
+"This is the role. Creative Director — Vyzee. You own how this company looks, moves, and sounds. Three pillars. One — you are the visual voice of the brand: every reel, every shoot, every frame the market sees. Two — you build the content engine: standardized output, repeatable systems, so we scale without it ever looking scaled. Three — you grow the room: you hire the junior shooter, the editor, the future creative team. This isn't a content gig. It's a function you own, end to end.",
+"A normal week. Two onsite shoots — usually a dental or medspa client in Makati or BGC. One studio editing block. One creative review with me and Cha where you call the shots on the brand direction. One day flexible — for content for our own brand, for hiring, for whatever the function needs. And the things in the neon card — those are yours. Not assigned. Not approved by committee. Yours.",
+"You've heard agency pitches before. Most are vibes. This one has a balance sheet. Here's the trajectory we're already executing against — month three, month six, month twelve. Look at month twelve. Thirty clinics on retainer. ₱800K to ₱1M MRR. That's not a wish. The pipeline is built, the SKUs are productized, the first pilot clients are signing. The team is locked. You are not joining a deck — you are joining a machine that has already started.",
+"I will not insult you with promises I can't keep. So here's what's real. Your 2% vests over four years, with a one-year cliff — meaning even if everything goes sideways at month thirteen, you keep your half-point. Your work belongs to you in your portfolio, always. Your role is documented in writing, not in vibes. And if I ever stop being the kind of CEO you wanted to work for, you have a clean exit. The pledge in neon is the one that matters: I would rather lose you than keep you in something that isn't worth it. That's my actual line.",
+"Here's the math no one wants to do in public. Two percent of Vyzee at year-twelve-month MRR — ₱1M monthly, twelve million annual, conservative agency multiple of three — is a company worth roughly ₱36M. Two percent of that is ₱720,000. Conservative. By year four — when you're fully vested — if we hit our Year-2 and Year-3 targets, that number is meaningfully higher. The neon number is what's possible. The figures below are what's locked at each vesting milestone. This is the part of the offer that doesn't show up on a payslip.",
+"Now I want to answer the things you haven't asked me yet — because I know you. These are the four questions sitting in the back of your head right now. I'm not going to dodge any of them. Read each Q on the left. Read my actual answer on the right. If one of these doesn't satisfy you, that's the conversation we need to have today, not after you've signed.",
+"If your answer is yes — and I think it is — this is what happens this week. Today: you tell me yes, by message, by call, however. By Friday: we sign the employee agreement and the vesting schedule, witnessed, clean paperwork, no surprises. Next week: you're in the room for our first creative direction meeting and your name goes on the company page. That's the runway. Three steps. Reversible up until you sign, irreversible the moment you do — in the best possible way.",
+"That's the deck. One last thing. I didn't build this company so I could fill seats. I built it because I want to work with people I actually respect, on work that actually matters, for money that finally reflects what we're worth. You are the person I want in this seat. Not a placeholder for the person. You. So — what do you say."
+]
+</script>
+
+<deck-stage width="1920" height="1080">
+
+  <!-- SLIDE 1 — COVER -->
+  <section data-label="01 Cover" class="cover">
+    <div class="frame">
+      <div class="runner">
+        <div class="index">01 / 14</div>
+        <div class="mid">The Vyzee Offer</div>
+        <div class="line"></div>
+        <div class="globe"></div>
+      </div>
+      <div class="stage">
+        <div class="eyebrow">AN OFFER · PREPARED 1 JUNE 2026</div>
+        <div class="cover-grid" style="margin-top: 28px;">
+          <div>
+            <h1 class="cover-title">Become the<br/><span class="accent">eye</span> behind<br/><span class="stroke">us.</span></h1>
+            <p class="lead">A seat, not a gig. The creative function of Vyzee owned end to end, with the title, the team, and
+the equity that come with it.</p>
+          </div>
+          <aside class="brand-card">
+            <div class="bc-word">VYZEE<sup>™</sup></div>
+            <div class="bc-tag">DIGITAL MARKETING SOLUTIONS</div>
+            <div class="bc-small"><span>
+</span></div>
+          </aside>
+        </div>
+        <div class="cover-meta">
+          <div><div class="label">Prepared for</div><div class="value neon">Justin Mark Garcia</div></div>
+          <div><div class="label">From</div><div class="value">Shad — CEO, Vyzee</div></div>
+          <div><div class="label">Role on the table</div><div class="value">Creative Director</div></div>
+          <div><div class="label">Time to read</div><div class="value">Twelve minutes</div></div>
+        </div>
+      </div>
+      <div class="footbar">
+        <div><span class="wordmark">VYZEE</span></div>
+        <div class="pg">01 / 14</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 2 — AGENDA -->
+  <section data-label="02 The conversation">
+    <div class="frame">
+      <div class="runner">
+        <div class="index">02 / 14</div>
+        <div class="mid">Roadmap</div>
+        <div class="line"></div>
+        <div class="globe"></div>
+      </div>
+      <div class="stage top">
+        <div class="eyebrow"><span class="spark"></span>The conversation</div>
+        <h2 class="headline" style="font-size: 64px; margin-top: 18px;">Seven movements.<br/><span class="accent">No selling for the first six minutes.</span></h2>
+        <div class="agenda-list" style="margin-top: 20px;">
+          <div class="agenda-row"><div class="n">01</div><div class="t">Where you <span class="accent">stand</span></div><div class="d">What we see in you currently.</div></div>
+          <div class="agenda-row"><div class="n">02</div><div class="t">The <span class="accent">ceiling</span></div><div class="d">The math of freelance, told honestly.</div></div>
+          <div class="agenda-row"><div class="n">03</div><div class="t">Year <span class="accent">four</span></div><div class="d">A specific future, not an abstract one.</div></div>
+          <div class="agenda-row"><div class="n">04</div><div class="t">The <span class="accent">role</span></div><div class="d">What you own. What you decide.</div></div>
+          <div class="agenda-row"><div class="n">05</div><div class="t">The <span class="accent">proof</span></div><div class="d">Why this isn't another startup story.</div></div>
+          <div class="agenda-row"><div class="n">06</div><div class="t">The <span class="accent">protection</span></div><div class="d">What's in writing, if we miss.</div></div>
+          <div class="agenda-row"><div class="n">07</div><div class="t">The <span class="accent">signature</span></div><div class="d">Three steps. This week. Reversible until it isn't.</div></div>
+        </div>
+      </div>
+      <div class="footbar"><div><span class="wordmark">VYZEE</span></div><div class="pg">02 / 14</div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3 — MIRROR -->
+  <section data-label="03 Where you stand">
+    <div class="frame">
+      <div class="runner"><div class="index">03 / 14</div><div class="mid">Mirror</div><div class="line"></div><div class="globe"></div></div>
+      <div class="stage">
+        <div class="eyebrow">WHERE YOU STAND</div>
+        <div class="mirror-grid">
+          <div>
+            <h2 class="mirror-lead">WE'VE BEEN
+WATCHING CAREFULLY.
+HERE'S WHAT WE SEE.</h2>
+          </div>
+          <div class="mirror-points">
+            <div class="mirror-point"><div class="bullet">01</div><div>You shoot and edit at a level most Manila freelancers reach in their late thirties. You're not there yet.</div></div>
+            <div class="mirror-point"><div class="bullet">02</div><div>You are booked, but unevenly.
+Some months feel like a career. Others feel like waiting.</div></div>
+            <div class="mirror-point"><div class="bullet">03</div><div>You've done good work for brands you'll never be credited on, and you've felt that quietly.</div></div>
+            <div class="mirror-point"><div class="bullet">04</div><div>You've watched friends start things. You've thought about starting something. The timing never lined up.</div></div>
+            <div class="mirror-point"><div class="bullet">05</div><div>You want to keep shooting. You also want a seat at a table, not a chair in a hallway.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="footbar"><div>If any line above is wrong — tell me before slide four.</div><div class="pg">03 / 14</div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4 — CEILING -->
+  <section data-label="04 The ceiling">
+    <div class="frame">
+      <div class="runner"><div class="index">04 / 14</div><div class="mid">Problem</div><div class="line"></div><div class="globe"></div></div>
+      <div class="stage">
+        <div class="eyebrow"><span class="spark"></span>The freelancer's ceiling</div>
+        <h2 class="headline" style="font-size: 72px; margin-top: 14px; margin-bottom: 28px;">Every month you start at <span class="accent">zero.</span></h2>
+        <div class="ceiling">
+          <div class="ceiling-left">
+            <div class="stat">₱<span class="z">0</span></div>
+            <div class="stat-sub">THE BALANCE EVERY FREELANCER WAKES UP TO
+ON THE 1ST.</div>
+          </div>
+          <div class="ceiling-right">
+            <div><div class="label">The structural trap</div><p>You rent your talent by the hour to brands that compound theirs. Their reel goes viral,
+they own the equity. Yours stays a line item.</p></div>
+            <div><div class="label">The cruel compounding</div><p>Every great deliverable raises the bar for the same fee. Better work doesn't earn more money. It earns the expectation of more work.</p></div>
+            <div><div class="label">The exit nobody warns you about</div><p>Five years in, your portfolio is heavy and your bank account is the same.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="footbar"><div>The status quo is not the safe choice. It's the expensive one.</div><div class="pg">04 / 14</div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5 — COST -->
+  <section data-label="05 The cost of staying">
+    <div class="frame">
+      <div class="runner"><div class="index">05 / 14</div><div class="mid">Cost of inaction</div><div class="line"></div><div class="globe"></div></div>
+      <div class="stage top">
+        <div class="eyebrow"><span class="spark"></span>Four years, two paths</div>
+        <h2 class="headline" style="font-size: 60px; margin-top: 14px;">What you walk away with, <span class="accent"></span></h2>
+        <div class="vz-pathtoggle" id="vzPathToggle">
+          <button class="vz-path" type="button" data-path="both" aria-pressed="true">Both paths</button>
+          <button class="vz-path vz-path-a" type="button" data-path="a" aria-pressed="false">Path A · Freelance</button>
+          <button class="vz-path vz-path-b" type="button" data-path="b" aria-pressed="false">Path B · Vyzee</button>
+        </div>
+        <table class="cost-table" id="vzCostTable">
+          <thead>
+            <tr><th></th><th>Path A — Freelance, four more years</th><th>Path B — Vyzee, vested in full</th><th style="text-align:right;">Delta</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="dim-col">Income</td><td class="now">₱60k–₱90k / mo, uneven</td><td class="then">Stable base + ownership upside</td><td class="delta">+ stability</td></tr>
+            <tr><td class="dim-col">Ownership</td><td class="now">0%</td><td class="then">2% vested</td><td class="delta">+ ₱720k</td></tr>
+            <tr><td class="dim-col">Team built</td><td class="now">You. Alone.</td><td class="then">Junior shooter + editor under you</td><td class="delta">+ leverage</td></tr>
+            <tr><td class="dim-col">Title</td><td class="now">Freelance Videographer</td><td class="then">Creative Director, Vyzee</td><td class="delta">+ gravity</td></tr>
+            <tr><td class="dim-col">What's yours at the end</td><td class="now">A portfolio</td><td class="then">A portfolio + a company you built</td><td class="delta">+ a life</td></tr>
+          </tbody>
+        </table>
+        <div class="cost-total">
+          <div class="label">Conservative four-year delta</div>
+          <div class="figure">≈ ₱2.4M+</div>
+        </div>
+      </div>
+      <div class="footbar"><div>Numbers assume Vyzee hits its Year-1 plan only. Year-2 onwards is upside.</div><div class="pg">05 / 14</div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6 — VISION -->
+  <section data-label="06 Year four">
+    <div class="frame">
+      <div class="runner"><div class="index">06 / 14</div><div class="mid">Vision</div><div class="line"></div><div class="globe"></div></div>
+      <div class="stage">
+        <div class="vision">
+          <div class="vision-img">
+            <div class="cap">Frame from a shoot, June 2030<em>"Backlot of our Makati studio, the morning your team wrapped the medspa campaign."</em></div>
+          </div>
+          <div class="vision-text">
+            <div class="eyebrow"><span class="spark"></span>Year four · looking back</div>
+            <h2>It's <span class="accent">JUNE 2030.</span><br/>Here's the morning<br/>you keep<br/>thinking about.</h2>
+            <div class="vision-points">
+              <div class="vision-point"><div class="n">01.</div><div class="t">Your <b>2% is fully vested.</b> The math on slide eleven became real.</div></div>
+              <div class="vision-point"><div class="n">02.</div><div class="t">Thirty-plus clinics on retainer — you pitched two with your own reel.</div></div>
+              <div class="vision-point"><div class="n">03.</div><div class="t">A junior shooter and an editor report to you. The team is yours to grow.</div></div>
+              <div class="vision-point"><div class="n">04.</div><div class="t">You haven't taken a freelance gig in three years. You don't miss them.</div></div>
+              <div class="vision-point"><div class="n">05.</div><div class="t">Every frame on your wall is credited to you — by name, by company, by ownership.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footbar"><div>This is the destination. Everything after this is how we get there.</div><div class="pg">06 / 14</div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7 — ROLE -->
+  <section data-label="07 The role">
+    <div class="frame">
+      <div class="runner"><div class="index">07 / 14</div><div class="mid">The role</div><div class="line"></div><div class="globe"></div></div>
+      <div class="stage">
+        <div class="role-head">
+          <div>
+            <div class="eyebrow" style="margin-bottom: 22px;"><span class="spark"></span>The role on the table</div>
+            <h2 class="title">Creative<br/><span class="accent">Director.</span></h2>
+          </div>
+          <div class="one-liner">A senior officer of Vyzee with full authority over how this company looks, moves, and sounds — and the budget, team, and equity that come with it.</div>
+        </div>
+        <div class="role-pillars">
+          <div class="pillar"><div class="n">Pillar 01</div><h3>The visual voice</h3><p>Every reel, shoot, and frame the market sees comes through you. You set the brand's eye for Vyzee, and for every client we put on camera.</p></div>
+          <div class="pillar"><div class="n">Pillar 02</div><h3>The content engine</h3><p>You productize what we shoot. Standardized output, repeatable systems, so we scale to fifty clinics without ever looking like we did.</p></div>
+          <div class="pillar"><div class="n">Pillar 03</div><h3>The room you grow</h3><p>You hire the junior shooter at month four. The editor at month eight. The next creative at year two. You build the team you wished you'd had.</p></div>
+        </div>
+      </div>
+      <div class="footbar"><div>Reports to: CEO &amp; Head of Growth. Owns: the entire creative function.</div><div class="pg">07 / 14</div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8 — WEEK -->
+  <section data-label="08 The week">
+    <div class="frame">
+      <div class="runner"><div class="index">08 / 14</div><div class="mid">The week</div><div class="line"></div><div class="globe"></div></div>
+      <div class="stage top">
+        <div class="eyebrow"><span class="spark"></span>A normal week</div>
+        <h2 class="headline" style="font-size: 60px; margin-top: 14px;">Two shoots. One studio. <span class="accent">One review. One yours.</span></h2>
+        <div class="week-grid">
+          <div class="week-list">
+            <div class="week-row"><div class="day">Mon</div><div class="what">Onsite shoot — <b>dental or medspa</b></div></div>
+            <div class="week-row"><div class="day">Tue</div><div class="what">Studio block — <b>edit, color, deliver</b></div></div>
+            <div class="week-row"><div class="day">Wed</div><div class="what">Onsite shoot — <b>second client</b></div></div>
+            <div class="week-row"><div class="day">Thu</div><div class="what">Creative review — <b>you call direction</b></div></div>
+            <div class="week-row"><div class="day">Fri</div><div class="what">Yours — <b>BRAND, HIRING, ETC.</b></div></div>
+          </div>
+          <div class="own-card">
+            <div class="label">WHAT YOU OWN</div>
+            <h3>Decisions that don't need a second signature.</h3>
+            <ul>
+              <li>The look of every Vyzee reel that ships.</li>
+              <li>The shot list for every client onsite.</li>
+              <li>Who you hire onto the creative team.</li>
+              <li>Content tools, kit, and budget under ₱30k/mo.</li>
+              <li>The final cut. Always.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footbar"><div>Time off, kit allowance, and shoot stipends — itemized in the appendix.</div><div class="pg">08 / 14</div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 9 — PROOF -->
+  <section data-label="09 Proof">
+    <div class="frame">
+      <div class="runner"><div class="index">09 / 14</div><div class="mid">Proof</div><div class="line"></div><div class="globe"></div></div>
+      <div class="stage top">
+        <div class="eyebrow"><span class="spark"></span>Why this isn't another startup story</div>
+        <h2 class="headline" style="font-size: 60px; margin-top: 14px;">A balance sheet, <span class="accent">NOT VIBES.</span></h2>
+        <p class="body" style="margin-top: 18px; max-width: 1200px;">Twelve-month MRR trajectory we are already executing against — productized SKUs, signed pilot clients, locked team.</p>
+        <div class="traj-grid">
+          <div class="traj-card"><div class="month">Month 3</div><div class="mrr">₱180<em>k</em></div><div class="desc">5–7 clients. Referral program live. Founder content begins.</div></div>
+          <div class="traj-card"><div class="month">Month 6</div><div class="mrr">₱500<em>k</em></div><div class="desc">15–18 clients. Performance-based pricing pilots active.</div></div>
+          <div class="traj-card"><div class="month">Month 9</div><div class="mrr">₱700<em>k</em></div><div class="desc">22–25 clients. Secondary vertical launched.</div></div>
+          <div class="traj-card spot"><div class="month">Month 12 →</div><div class="mrr">₱1<em>M</em></div><div class="desc">30+ clinics on retainer. Defensible position. Cebu opens.</div></div>
+        </div>
+        <div class="proof-foot">
+          <div><div class="label">Margin profile</div><div class="value">70%+ on <em>Automation-in-a-Box</em></div></div>
+          <div><div class="label">Defensibility</div><div class="value">Workflow lock-in via <em>GoHighLevel</em></div></div>
+          <div><div class="label">Burn</div><div class="value">~₱20k/mo → <em>12+ months runway</em></div></div>
+        </div>
+      </div>
+      <div class="footbar"><div>You are not joining a deck. You are joining a machine that has already started.</div><div class="pg">09 / 14</div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 10 — PROTECTION -->
+  <section data-label="10 What protects you">
+    <div class="frame">
+      <div class="runner"><div class="index">10 / 14</div><div class="mid">Protection</div><div class="line"></div><div class="globe"></div></div>
+      <div class="stage top">
+        <div class="eyebrow"><span class="spark"></span>What protects you, if we miss</div>
+        <h2 class="headline" style="font-size: 56px; margin-top: 14px;">No promises I can't keep. <span class="accent">Here's what's in writing.</span></h2>
+        <div class="protect-grid">
+          <div class="protect"><div class="label">Risk 01 · Financial</div><h3>One-year <span class="accent">cliff,</span> then monthly.</h3><p>Cross month 12 and 0.5% vests instantly. The rest vests monthly across years 2–4. Part ways at month 13 — you keep half a point. Forever.</p></div>
+          <div class="protect"><div class="label">Risk 02 · Time</div><h3>Your work is <span class="accent">always yours.</span></h3><p>Every frame you shoot at Vyzee is yours to use — credited, exportable, no NDA bs. If you leave, you leave with your body of work stays with you.</p></div>
+          <div class="protect"><div class="label">Risk 03 · Authority</div><h3>The role is <span class="accent">documented.</span></h3><p>Title, decision rights, budget authority, hiring power, reporting line is written into the agreement. Not hula-hula shi. Not "we'll figure it out."</p></div>
+          <div class="protect"><div class="label">Risk 04 · Trust</div><h3>Clean exit, <span class="accent">any time.</span></h3><p>30-day notice either way, no claw-back on vested equity, no non-compete that boxes you out of creative work in Manila. You owe us your best, not your future.</p></div>
+        </div>
+        <div class="protect-pledge">
+          <div class="label">My pledge to you — on the record</div>
+          <p>"I would rather lose you to something better than keep you in something that isn't worth it." — Shadiboy</p>
+        </div>
+      </div>
+      <div class="footbar"><div>FULL CONTRACT, DPA CLAUSE, AND SLA TERMS, POST-SIGNING.</div><div class="pg">10 / 14</div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 11 — EQUITY -->
+  <section data-label="11 Your 2%">
+    <div class="frame">
+      <div class="runner"><div class="index">11 / 14</div><div class="mid">Your equity</div><div class="line"></div><div class="globe"></div></div>
+      <div class="stage">
+        <div class="eyebrow"><span class="spark"></span>The number on the table</div>
+        <div class="equity-hero">
+          <div>
+            <div class="equity-num">2<span class="pct">%</span></div>
+            <p style="font-family: var(--mono); font-size: 20px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(247,247,247,.5); margin-top: 18px;">Of Vyzee — vested over 4 years, 1-year cliff</p>
+          </div>
+          <div class="equity-side">
+            <h3>The math no one<br/>does in <span class="accent">public.</span></h3>
+            <p>At Year 1 plan — ₱1M MRR, ₱12M ARR, conservative 3× agency multiple — Vyzee is worth roughly ₱36M. Two percent is ₱720,000. Year 2 and beyond is upside.</p>
+            <div class="vz-calc" id="vzCalc">
+              <div class="vz-calc-top">
+                <span class="vz-calc-label">If Vyzee hits</span>
+                <span class="vz-calc-mrr" id="vzMrrOut">₱1.0M<i>&nbsp;MRR</i></span>
+              </div>
+              <input class="vz-slider" id="vzMrr" type="range" min="200000" max="2000000" step="50000" value="1000000" aria-label="Monthly recurring revenue">
+              <div class="vz-time">
+                <div class="vz-time-track" id="vzTrack">
+                  <div class="vz-time-fill" id="vzTimeFill"></div>
+                  <button class="vz-node" type="button" data-p="0" style="left:0%"><i></i><span>M12</span></button>
+                  <button class="vz-node" type="button" data-p="0.333" style="left:33.3%"><i></i><span>M24</span></button>
+                  <button class="vz-node" type="button" data-p="0.667" style="left:66.7%"><i></i><span>M36</span></button>
+                  <button class="vz-node" type="button" data-p="1" style="left:100%"><i></i><span>M48</span></button>
+                  <div class="vz-handle" id="vzHandle" tabindex="0" role="slider" aria-label="Vesting milestone"></div>
+                </div>
+              </div>
+              <div class="vz-payout">
+                <span class="vz-payout-label">Your <b id="vzVest">2.0%</b> is worth</span>
+                <span class="vz-payout-val" id="vzPayout">≈ ₱720,000</span>
+              </div>
+              <div class="vz-calc-note">Drag the slider + milestone. Value = MRR × 12 × 3× multiple.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footbar"><div>This is the part of the offer that doesn't show up on a payslip.</div><div class="pg">11 / 14</div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 12 — OBJECTIONS -->
+  <section data-label="12 The questions">
+    <div class="frame">
+      <div class="runner"><div class="index">12 / 14</div><div class="mid">Questions</div><div class="line"></div><div class="globe"></div></div>
+      <div class="stage top">
+        <div class="eyebrow"><span class="spark"></span>The questions you haven't asked yet</div>
+        <h2 class="headline" style="font-size: 56px; margin-top: 14px;">Four questions in the back of <span class="accent">your head.</span></h2>
+        <div class="qa-list">
+          <div class="qa"><div class="n">Q · 01</div><div class="q">"What if Vyzee doesn't make it past year one?"</div><div class="a">You keep your half-point at the cliff, your portfolio comes with you, and you go back to freelancing with a Creative Director title and twelve months of real agency experience and you will not lose.</div></div>
+          <div class="qa"><div class="n">Q · 02</div><div class="q">"Can I still take side gigs?"</div><div class="a">Yes — weddings, personal art projects, friends' brands. The only restriction: no other agency targeting the same services around the Metro. That's it.</div></div>
+          <div class="qa"><div class="n">Q · 03</div><div class="q">"What if I burn out doing two shoots a week?"</div><div class="a">You hire the junior shooter at month four. By month eight you're directing more than shooting. The role gets lighter on cam from time to time.</div></div>
+          <div class="qa"><div class="n">Q · 04</div><div class="q">"WHY ME AND NOT SOMEONE CHEAPER?"</div><div class="a">Because we don't want a random. We want a someone that builds our visual voice of a company we're building for ten years. Cheaper hires fill seats fast while you build a function. I'd rather pay you in equity than lose you in three months.</div></div>
+        </div>
+      </div>
+      <div class="footbar"><div>If the question keeping you up isn't here — ask it before slide thirteen.</div><div class="pg">12 / 14</div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 13 — NEXT STEPS -->
+  <section data-label="13 What happens this week">
+    <div class="frame">
+      <div class="runner"><div class="index">13 / 14</div><div class="mid">This week</div><div class="line"></div><div class="globe"></div></div>
+      <div class="stage top">
+        <div class="eyebrow"><span class="spark"></span>If your answer is yes</div>
+        <h2 class="headline" style="font-size: 60px; margin-top: 14px;">Three steps. <span class="accent">Reversible until they aren't.</span></h2>
+        <div class="week3">
+          <div class="step"><div class="when">STEP 01 · BY THIS WEEK</div><div class="big">01</div><h3>You tell me <span class="accent">yes.</span></h3><p>Message, call, voice note or whatever's good sayo em. No paperwork yet. 
+No commitment beyond that pa.</p></div>
+          <div class="step"><div class="when">STEP 02 · BY NEXT WEEK</div><div class="big">02</div><h3>We <span class="accent">sign.</span></h3><p>Employee agreement + vesting schedule, witnessed. Clean paperwork with vesting, role, decision rights, exit terms.
+Read it. Question it. Sign it.</p></div>
+          <div class="step"><div class="when">STEP 03 · BY NEXT NEXT WEEK</div><div class="big">03</div><h3>You're <span class="accent">in the room.</span></h3><p>First creative direction meeting. Your name goes on the company page. Your first shoot is on the calendar. Year one starts.</p></div>
+        </div>
+        <div class="urgency">
+          <div class="l">One honest reason to decide this week</div>
+          <div class="r">We open outbound to 200 clinics on Monday.
+I need the visual voice in the room before that.</div>
+        </div>
+      </div>
+      <div class="footbar"><div>shad@vyzee.ph · The door is open. The clock is gentle.</div><div class="pg">13 / 14</div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 14 — CLOSE -->
+  <section data-label="14 One signature">
+    <div class="frame">
+      <div class="runner"><div class="index">14 / 14</div><div class="mid">One signature</div><div class="line"></div><div class="globe"></div></div>
+      <div class="stage">
+        <div class="close">
+          <div class="eyebrow"><span class="spark"></span>One signature</div>
+          <h2 class="close-line">You're the one I want<br/>in this seat. <span class="accent">Not a<br/>placeholder.</span></h2>
+          <div class="sign">
+            <div class="from">Shad — CEO, Vyzee<span>FOUNDER · 1 JUNE 2026</span></div>
+            <div class="to">Prepared for<em>Justin Mark Garcia</em></div>
+          </div>
+        </div>
+      </div>
+      <div class="footbar"><div>VYZEE  ·  DIGITAL MARKETING SOLUTIONS</div><div class="pg">14 / 14</div></div>
+    </div>
+  </section>
+
+</deck-stage>
+
+<!-- Premium Vyzee control bar -->
+<div class="vz-nav" id="vzNav" aria-hidden="false">
+  <!-- LEFT — brand + live section -->
+  <div class="vz-zone vz-left">
+    <span class="vz-wordmark">VYZEE<i>™</i></span>
+    <span class="vz-vdiv"></span>
+    <span class="vz-section"><b id="vzSecN">01</b><span id="vzSecLabel">Cover</span></span>
+  </div>
+
+  <!-- CENTER — prev / counter / next -->
+  <div class="vz-zone vz-center">
+    <div class="vz-cluster">
+      <button class="vz-btn" id="vzPrev" type="button" aria-label="Previous slide" title="Previous (←)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <div class="vz-readout">
+        <div class="vz-count"><span id="vzCur">01</span><span class="vz-slash">/</span><span id="vzTot">14</span></div>
+        <div class="vz-track"><div class="vz-fill" id="vzFill"></div></div>
+      </div>
+      <button class="vz-btn" id="vzNext" type="button" aria-label="Next slide" title="Next (→)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- RIGHT — tick jumper + play + present + sound + overview + fullscreen -->
+  <div class="vz-zone vz-right">
+    <div class="vz-ticks" id="vzTicks" role="tablist" aria-label="Jump to slide"></div>
+    <button class="vz-icon" id="vzPlay" type="button" aria-label="Auto-play" title="Auto-play (Space-hold / P-no)">
+      <svg class="vz-play-on" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+      <svg class="vz-play-off" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+    </button>
+    <button class="vz-icon" id="vzPresent" type="button" aria-label="Present mode" title="Present mode (P)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="1.5"/><path d="M8 21h8M12 17v4"/></svg>
+    </button>
+    <button class="vz-icon" id="vzSound" type="button" aria-label="Toggle sound" title="Sound (S)">
+      <svg class="vz-snd-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>
+      <svg class="vz-snd-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14"/></svg>
+    </button>
+    <button class="vz-icon" id="vzOverview" type="button" aria-label="Slide overview" title="Overview (G)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    </button>
+    <button class="vz-icon" id="vzFs" type="button" aria-label="Toggle fullscreen" title="Fullscreen (F)">
+      <svg class="vz-fs-enter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V5a1 1 0 0 1 1-1h4M20 9V5a1 1 0 0 0-1-1h-4M4 15v4a1 1 0 0 0 1 1h4M20 15v4a1 1 0 0 1-1 1h-4"/></svg>
+      <svg class="vz-fs-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4v4a1 1 0 0 1-1 1H4M15 4v4a1 1 0 0 0 1 1h4M9 20v-4a1 1 0 0 0-1-1H4M15 20v-4a1 1 0 0 1 1-1h4"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- Slide overview overlay -->
+<div class="vz-ov" id="vzOv" aria-hidden="true">
+  <div class="vz-ov-head">
+    <div class="vz-ov-title"><span class="vz-spark"></span>All slides <em id="vzOvCount">14</em></div>
+    <button class="vz-ov-close" id="vzOvClose" type="button" aria-label="Close overview" title="Close (Esc)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="vz-grid" id="vzGrid"></div>
+</div>
+
+<style>
+  /* Reserve a strip at the bottom so the nav never overlaps the slide.
+     Overrides deck-stage's :host { inset:0 } — outer document rules win. */
+  deck-stage { bottom: 120px !important; }
+  html, body { background: #000; }
+
+  .vz-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    z-index: 2147483000;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 0 36px;
+    background: #060606;
+    border-top: 1px solid rgba(247, 247, 247, 0.10);
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    opacity: 0;
+    animation: vzNavIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+  }
+  @keyframes vzNavIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .vz-zone { display: flex; align-items: center; min-width: 0; }
+  .vz-left { gap: 18px; }
+  .vz-center { justify-content: center; }
+  .vz-right { justify-content: flex-end; gap: 14px; }
+
+  /* LEFT — brand + section */
+  .vz-wordmark {
+    font-family: "Archivo Black", sans-serif;
+    font-size: 24px;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    transform: skewX(-8deg);
+    color: #F7F7F7;
+    display: inline-flex;
+    align-items: flex-start;
+    line-height: 1;
+  }
+  .vz-wordmark i { font-style: normal; font-size: 10px; color: #CCFF00; margin-left: 2px; }
+  .vz-vdiv { width: 1px; height: 34px; background: rgba(247,247,247,0.16); }
+  .vz-section { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+  .vz-section b {
+    font-size: 16px; font-weight: 700; color: #CCFF00; letter-spacing: 0.04em; flex-shrink: 0;
+  }
+  .vz-section span {
+    font-size: 15px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(247,247,247,0.6);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  /* CENTER — cluster */
+  .vz-cluster {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 12px 18px;
+    border-radius: 999px;
+    background: rgba(20, 20, 20, 0.72);
+    border: 1px solid rgba(247, 247, 247, 0.12);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(247, 247, 247, 0.06);
+  }
+  .vz-btn {
+    -webkit-appearance: none; appearance: none;
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    border: 1px solid rgba(247, 247, 247, 0.16);
+    background: linear-gradient(160deg, rgba(36, 36, 36, 0.9), rgba(11, 11, 11, 0.9));
+    color: #F7F7F7;
+    display: grid; place-items: center;
+    cursor: pointer; position: relative; overflow: hidden;
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.28s ease, box-shadow 0.28s ease, color 0.28s ease;
+  }
+  .vz-btn svg { width: 22px; height: 22px; position: relative; z-index: 1; transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1); }
+  .vz-btn::before {
+    content: ""; position: absolute; inset: 0; border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, rgba(204, 255, 0, 0.95), rgba(204, 255, 0, 0) 70%);
+    opacity: 0; transform: scale(0.4);
+    transition: opacity 0.32s ease, transform 0.32s ease;
+  }
+  .vz-btn:hover {
+    border-color: rgba(204, 255, 0, 0.55); color: #0B0B0B;
+    box-shadow: 0 0 0 1px rgba(204, 255, 0, 0.3), 0 10px 30px rgba(204, 255, 0, 0.22);
+    transform: translateY(-2px);
+  }
+  .vz-btn:hover::before { opacity: 1; transform: scale(1.1); }
+  .vz-btn:active { transform: translateY(0) scale(0.94); }
+  .vz-btn#vzPrev:hover svg { transform: translateX(-3px); }
+  .vz-btn#vzNext:hover svg { transform: translateX(3px); }
+  .vz-btn[disabled] { opacity: 0.28; pointer-events: none; box-shadow: none; }
+
+  .vz-readout { display: flex; flex-direction: column; gap: 8px; min-width: 120px; padding: 0 4px; }
+  .vz-count {
+    display: flex; align-items: baseline; justify-content: center; gap: 6px;
+    font-size: 18px; font-weight: 700; letter-spacing: 0.08em; color: #F7F7F7;
+  }
+  .vz-count #vzCur { color: #CCFF00; }
+  .vz-count .vz-slash { color: rgba(247, 247, 247, 0.4); }
+  .vz-count #vzTot { color: rgba(247, 247, 247, 0.6); }
+  .vz-track { height: 4px; border-radius: 999px; background: rgba(247, 247, 247, 0.14); overflow: hidden; }
+  .vz-fill {
+    height: 100%; width: 7.14%; border-radius: 999px;
+    background: linear-gradient(90deg, #CCFF00, #0066FF);
+    box-shadow: 0 0 12px rgba(204, 255, 0, 0.6);
+    transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* RIGHT — tick jumper */
+  .vz-ticks { display: flex; align-items: center; gap: 5px; padding-right: 6px; }
+  .vz-tick {
+    -webkit-appearance: none; appearance: none; border: 0; padding: 0; cursor: pointer;
+    width: 4px; height: 18px; border-radius: 999px;
+    background: rgba(247, 247, 247, 0.2);
+    transition: background 0.3s ease, height 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s ease, transform 0.2s ease;
+  }
+  .vz-tick:hover { background: rgba(247,247,247,0.55); transform: scaleY(1.15); }
+  .vz-tick.is-past { background: rgba(204, 255, 0, 0.45); }
+  .vz-tick.is-current {
+    height: 26px; width: 5px;
+    background: #CCFF00;
+    box-shadow: 0 0 10px rgba(204, 255, 0, 0.8);
+  }
+
+  .vz-icon {
+    -webkit-appearance: none; appearance: none;
+    width: 48px; height: 48px; border-radius: 14px;
+    border: 1px solid rgba(247, 247, 247, 0.14);
+    background: rgba(20, 20, 20, 0.7);
+    color: rgba(247, 247, 247, 0.82);
+    display: grid; place-items: center; cursor: pointer; position: relative;
+    transition: transform 0.24s cubic-bezier(0.22,1,0.36,1), border-color 0.24s ease, color 0.24s ease, background 0.24s ease, box-shadow 0.24s ease;
+  }
+  .vz-icon svg { width: 21px; height: 21px; }
+  .vz-icon:hover {
+    border-color: rgba(204, 255, 0, 0.55);
+    color: #CCFF00;
+    background: rgba(204,255,0,0.06);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    transform: translateY(-2px);
+  }
+  .vz-icon:active { transform: translateY(0) scale(0.95); }
+  .vz-icon.is-on { border-color: rgba(204,255,0,0.7); color: #0B0B0B; background: #CCFF00; }
+  .vz-fs-exit { display: none; }
+  .vz-icon.is-fs .vz-fs-enter { display: none; }
+  .vz-icon.is-fs .vz-fs-exit { display: block; }
+
+  /* Hide left/right zones on narrow screens; keep the cluster usable */
+  @media (max-width: 900px) {
+    .vz-left, .vz-ticks { display: none; }
+  }
+
+  /* OVERVIEW OVERLAY */
+  .vz-ov {
+    position: fixed; inset: 0;
+    z-index: 2147483600;
+    background:
+      radial-gradient(circle at 82% 8%, rgba(106,0,255,0.28), transparent 34%),
+      radial-gradient(circle at 8% 92%, rgba(0,102,255,0.18), transparent 30%),
+      rgba(6,6,6,0.96);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex; flex-direction: column;
+    padding: 48px 56px 56px;
+    opacity: 0; visibility: hidden; transform: scale(1.02);
+    transition: opacity 0.32s ease, transform 0.32s cubic-bezier(0.22,1,0.36,1), visibility 0.32s;
+  }
+  .vz-ov::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(247,247,247,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(247,247,247,0.04) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: linear-gradient(180deg, rgba(0,0,0,0.6), transparent 70%);
+  }
+  .vz-ov.is-open { opacity: 1; visibility: visible; transform: scale(1); }
+  .vz-ov-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; position: relative; z-index: 1; }
+  .vz-ov-title {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 22px; letter-spacing: 0.14em; text-transform: uppercase; color: #F7F7F7;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .vz-ov-title em { font-style: normal; color: rgba(247,247,247,0.45); }
+  .vz-spark { width: 16px; height: 16px; position: relative; display: inline-block; color: #CCFF00; }
+  .vz-spark::before, .vz-spark::after { content: ""; position: absolute; background: currentColor; left: 50%; top: 50%; transform: translate(-50%,-50%); }
+  .vz-spark::before { width: 2.5px; height: 16px; }
+  .vz-spark::after { width: 16px; height: 2.5px; }
+  .vz-ov-close {
+    -webkit-appearance: none; appearance: none;
+    width: 52px; height: 52px; border-radius: 50%;
+    border: 1px solid rgba(247,247,247,0.16); background: rgba(20,20,20,0.7);
+    color: #F7F7F7; display: grid; place-items: center; cursor: pointer;
+    transition: transform 0.24s ease, border-color 0.24s ease, color 0.24s ease, background 0.24s ease;
+  }
+  .vz-ov-close svg { width: 22px; height: 22px; }
+  .vz-ov-close:hover { border-color: #FF2D95; color: #FF2D95; transform: rotate(90deg); }
+  .vz-grid {
+    position: relative; z-index: 1;
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px;
+    overflow-y: auto; padding-right: 8px; align-content: start;
+  }
+  .vz-card {
+    -webkit-appearance: none; appearance: none; text-align: left; cursor: pointer;
+    border: 1px solid rgba(247,247,247,0.12);
+    background: linear-gradient(160deg, rgba(23,23,23,0.9), rgba(11,11,11,0.9));
+    border-radius: 16px; padding: 22px 22px 24px;
+    display: flex; flex-direction: column; gap: 14px; min-height: 132px;
+    position: relative; overflow: hidden;
+    transition: transform 0.26s cubic-bezier(0.22,1,0.36,1), border-color 0.26s ease, box-shadow 0.26s ease;
+  }
+  .vz-card::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+    background: rgba(247,247,247,0.16); transition: background 0.26s ease;
+  }
+  .vz-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(204,255,0,0.5);
+    box-shadow: 0 18px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(204,255,0,0.2);
+  }
+  .vz-card:hover::before { background: #CCFF00; }
+  .vz-card .vz-card-n { font-family: "JetBrains Mono", monospace; font-size: 15px; letter-spacing: 0.1em; color: rgba(247,247,247,0.45); }
+  .vz-card .vz-card-t { font-family: "Archivo Black", sans-serif; font-size: 26px; line-height: 0.96; text-transform: uppercase; letter-spacing: -0.03em; color: #F7F7F7; }
+  .vz-card.is-current { border-color: #CCFF00; background: linear-gradient(160deg, rgba(204,255,0,0.14), rgba(11,11,11,0.92)); }
+  .vz-card.is-current::before { background: #CCFF00; }
+  .vz-card.is-current .vz-card-n { color: #CCFF00; }
+
+  @media print { .vz-nav, .vz-ov { display: none !important; } }
+</style>
+
+<!-- FX overlays -->
+<div id="vzGrain" aria-hidden="true"></div>
+<div id="vzSweep" aria-hidden="true"></div>
+<div id="vzToast" aria-hidden="true"></div>
+
+<style id="vz-fx">
+  /* ---- play / sound icon state ---- */
+  .vz-play-off, .vz-snd-on { display: none; }
+  .vz-icon.is-playing .vz-play-on { display: none; }
+  .vz-icon.is-playing .vz-play-off { display: block; }
+  .vz-icon.is-on .vz-snd-off { display: none; }
+  .vz-icon.is-on .vz-snd-on { display: block; }
+  @media (max-width: 1180px) { #vzPlay, #vzPresent, #vzSound { display: none; } }
+
+  /* ---- cinematic slide entrance + staggered reveal ---- */
+  .vz-enter .frame { animation: vzFrameIn 0.6s cubic-bezier(0.22,1,0.36,1) both; }
+  @keyframes vzFrameIn { from { opacity: 0; transform: scale(0.986); } to { opacity: 1; transform: none; } }
+  .vz-enter .runner { animation: vzRise 0.5s ease both 0.04s; }
+  .vz-enter .stage > * { animation: vzRise 0.62s cubic-bezier(0.22,1,0.36,1) both; }
+  .vz-enter .stage > *:nth-child(1) { animation-delay: 0.12s; }
+  .vz-enter .stage > *:nth-child(2) { animation-delay: 0.20s; }
+  .vz-enter .stage > *:nth-child(3) { animation-delay: 0.28s; }
+  .vz-enter .stage > *:nth-child(4) { animation-delay: 0.36s; }
+  .vz-enter .stage > *:nth-child(5) { animation-delay: 0.44s; }
+  .vz-enter .stage > *:nth-child(n+6) { animation-delay: 0.5s; }
+  .vz-enter .footbar { animation: vzRise 0.5s ease both 0.46s; }
+  @keyframes vzRise { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+  @media print { .vz-enter .frame, .vz-enter .runner, .vz-enter .stage > *, .vz-enter .footbar { animation: none !important; } }
+
+  /* ---- ambient gradient drift on the active slide ---- */
+  section[data-deck-active] { animation: vzDrift 17s ease-in-out infinite alternate; }
+  @keyframes vzDrift {
+    0%   { background-position: 80% 6%, 10% 92%, 0 0; }
+    100% { background-position: 89% 13%, 3% 85%, 0 0; }
+  }
+
+  /* ---- film grain overlay ---- */
+  #vzGrain {
+    position: fixed; inset: 0; pointer-events: none; z-index: 2147481000;
+    opacity: 0.05; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: vzGrain 0.5s steps(2) infinite;
+  }
+  @keyframes vzGrain {
+    0% { transform: translate(0,0); } 50% { transform: translate(-4%, 3%); } 100% { transform: translate(2%, -2%); }
+  }
+  @media print { #vzGrain { display: none; } }
+
+  /* ---- neon scanline sweep on slide change ---- */
+  #vzSweep { position: fixed; inset: 0; pointer-events: none; z-index: 2147481500; opacity: 0; overflow: hidden; }
+  #vzSweep::before {
+    content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 160px;
+    transform: translateX(-200px);
+    background: linear-gradient(90deg, transparent, rgba(204,255,0,0.05) 38%, rgba(204,255,0,0.45) 50%, rgba(204,255,0,0.05) 62%, transparent);
+    filter: blur(1px);
+  }
+  #vzSweep.is-sweep { opacity: 1; }
+  #vzSweep.is-sweep::before { animation: vzSweepMove 0.6s cubic-bezier(0.4,0,0.2,1); }
+  @keyframes vzSweepMove { from { transform: translateX(-200px); } to { transform: translateX(calc(100vw + 200px)); } }
+  @media print { #vzSweep { display: none; } }
+
+  /* ---- present mode ---- */
+  body.vz-present .vz-nav { transform: translateY(130%); opacity: 0; pointer-events: none; }
+  body.vz-present deck-stage { bottom: 0 !important; }
+  body.vz-present .runner, body.vz-present .footbar { opacity: 0; transition: opacity 0.4s ease; }
+  #vzToast {
+    position: fixed; left: 50%; bottom: 40px; transform: translateX(-50%) translateY(16px);
+    z-index: 2147483400; padding: 12px 22px; border-radius: 999px;
+    background: rgba(20,20,20,0.85); border: 1px solid rgba(204,255,0,0.4);
+    color: #F7F7F7; font-family: "JetBrains Mono", monospace; font-size: 16px; letter-spacing: 0.06em; text-transform: uppercase;
+    opacity: 0; pointer-events: none; transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  #vzToast.is-show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ---- slide 5 path toggle ---- */
+  .vz-pathtoggle { display: flex; gap: 10px; margin: 6px 0 14px; }
+  .vz-path {
+    -webkit-appearance: none; appearance: none; cursor: pointer;
+    font-family: "JetBrains Mono", monospace; font-size: 16px; letter-spacing: 0.04em; text-transform: uppercase;
+    padding: 9px 18px; border-radius: 999px;
+    border: 1px solid rgba(247,247,247,0.18); background: rgba(247,247,247,0.04); color: rgba(247,247,247,0.7);
+    transition: all 0.24s ease;
+  }
+  .vz-path:hover { border-color: rgba(247,247,247,0.4); color: #F7F7F7; }
+  .vz-path[aria-pressed="true"] { background: var(--neon); border-color: var(--neon); color: #0B0B0B; font-weight: 700; box-shadow: 0 6px 20px rgba(204,255,0,0.25); }
+  .vz-path-b[aria-pressed="true"] { background: var(--neon); }
+  #vzCostTable td { transition: opacity 0.4s ease, color 0.4s ease; }
+  #vzCostTable.vz-show-a .then, #vzCostTable.vz-show-a td.delta { opacity: 0.18; }
+  #vzCostTable.vz-show-b .now { opacity: 0.18; }
+  #vzCostTable.vz-show-b .then { color: var(--neon); }
+  #vzCostTable.vz-show-b td.delta { color: var(--neon); }
+
+  /* ---- slide 11 interactive equity calculator ---- */
+  .vz-calc { margin-top: 26px; display: flex; flex-direction: column; gap: 14px; max-width: 620px; }
+  .vz-calc-top { display: flex; align-items: baseline; justify-content: space-between; }
+  .vz-calc-label { font-family: "JetBrains Mono", monospace; font-size: 18px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(247,247,247,0.55); }
+  .vz-calc-mrr { font-family: "Archivo Black", sans-serif; font-size: 34px; letter-spacing: -0.03em; color: #F7F7F7; }
+  .vz-calc-mrr i { font-family: "JetBrains Mono", monospace; font-style: normal; font-size: 16px; color: rgba(247,247,247,0.5); }
+  .vz-slider {
+    -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 999px;
+    background: rgba(247,247,247,0.16); outline: none; cursor: pointer; margin: 2px 0 6px;
+  }
+  .vz-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--neon); border: 3px solid #0B0B0B; box-shadow: 0 0 0 1px var(--neon), 0 0 16px rgba(204,255,0,0.7); cursor: grab;
+  }
+  .vz-slider::-moz-range-thumb { width: 26px; height: 26px; border-radius: 50%; background: var(--neon); border: 3px solid #0B0B0B; box-shadow: 0 0 14px rgba(204,255,0,0.7); cursor: grab; }
+  .vz-time { padding: 14px 13px 4px; }
+  .vz-time-track { position: relative; height: 4px; border-radius: 999px; background: rgba(247,247,247,0.16); }
+  .vz-time-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; border-radius: 999px; background: linear-gradient(90deg, #CCFF00, #0066FF); box-shadow: 0 0 10px rgba(204,255,0,0.5); transition: width 0.18s ease; }
+  .vz-node {
+    -webkit-appearance: none; appearance: none; position: absolute; top: 50%; transform: translate(-50%,-50%);
+    background: none; border: 0; cursor: pointer; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 0;
+  }
+  .vz-node i { width: 12px; height: 12px; border-radius: 50%; background: #1a1a1a; border: 2px solid rgba(247,247,247,0.4); transition: all 0.2s ease; }
+  .vz-node span { position: absolute; top: 16px; font-family: "JetBrains Mono", monospace; font-size: 13px; letter-spacing: 0.05em; color: rgba(247,247,247,0.45); white-space: nowrap; }
+  .vz-node.is-reached i { background: var(--neon); border-color: var(--neon); }
+  .vz-node.is-reached span { color: rgba(247,247,247,0.7); }
+  .vz-handle {
+    position: absolute; top: 50%; left: 100%; transform: translate(-50%,-50%);
+    width: 24px; height: 24px; border-radius: 50%; background: #F7F7F7; border: 4px solid #0B0B0B;
+    box-shadow: 0 0 0 2px #F7F7F7, 0 0 18px rgba(255,255,255,0.5); cursor: grab; z-index: 2;
+    transition: left 0.18s ease;
+  }
+  .vz-handle:active { cursor: grabbing; }
+  .vz-payout { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(247,247,247,0.14); }
+  .vz-payout-label { font-family: "JetBrains Mono", monospace; font-size: 18px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(247,247,247,0.6); }
+  .vz-payout-label b { color: var(--neon); }
+  .vz-payout-val { font-family: "Archivo Black", sans-serif; font-size: 42px; line-height: 1; letter-spacing: -0.03em; color: var(--neon); text-shadow: 0 0 22px rgba(204,255,0,0.35); }
+  .vz-calc-note { font-family: "JetBrains Mono", monospace; font-size: 14px; letter-spacing: 0.04em; color: rgba(247,247,247,0.4); margin-top: 12px; }
+
+  /* ---- trajectory bar fills (slide 9) injected by JS ---- */
+  .vz-mbar { height: 5px; border-radius: 999px; background: rgba(247,247,247,0.14); overflow: hidden; margin-top: 14px; }
+  .vz-mbar i { display: block; height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, #CCFF00, #0066FF); box-shadow: 0 0 10px rgba(204,255,0,0.5); transition: width 1s cubic-bezier(0.22,1,0.36,1); }
+  .traj-card.spot .vz-mbar { background: rgba(11,11,11,0.25); }
+  .traj-card.spot .vz-mbar i { background: #0B0B0B; box-shadow: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vz-enter .frame, .vz-enter .runner, .vz-enter .stage > *, .vz-enter .footbar,
+    section[data-deck-active], #vzGrain, #vzSweep.is-sweep::before { animation: none !important; }
+  }
+</style>
+
+<script src="deck-stage.js"></script>
+<script>
+  (function () {
+    var deck = document.querySelector('deck-stage');
+    var nav = document.getElementById('vzNav');
+    if (!deck || !nav) return;
+
+    var prevBtn = document.getElementById('vzPrev');
+    var nextBtn = document.getElementById('vzNext');
+    var curEl = document.getElementById('vzCur');
+    var totEl = document.getElementById('vzTot');
+    var fill = document.getElementById('vzFill');
+    var secN = document.getElementById('vzSecN');
+    var secLabel = document.getElementById('vzSecLabel');
+    var ticksWrap = document.getElementById('vzTicks');
+    var ovBtn = document.getElementById('vzOverview');
+    var fsBtn = document.getElementById('vzFs');
+    var ov = document.getElementById('vzOv');
+    var ovClose = document.getElementById('vzOvClose');
+    var ovCount = document.getElementById('vzOvCount');
+    var grid = document.getElementById('vzGrid');
+
+    var pad = function (n) { return String(n).padStart(2, '0'); };
+
+    // Read slide labels straight from the authored sections.
+    var sections = Array.prototype.slice.call(document.querySelectorAll('deck-stage > section'));
+    var labels = sections.map(function (s, i) {
+      var raw = (s.getAttribute('data-label') || ('Slide ' + (i + 1))).trim();
+      // strip a leading "01 " number prefix if present
+      var m = raw.match(/^\d+\s+(.*)$/);
+      return m ? m[1] : raw;
+    });
+    var total = labels.length || (deck.length || 1);
+
+    // Build tick jumper.
+    var ticks = [];
+    for (var i = 0; i < total; i++) {
+      (function (idx) {
+        var t = document.createElement('button');
+        t.className = 'vz-tick';
+        t.type = 'button';
+        t.setAttribute('aria-label', 'Slide ' + (idx + 1) + ' — ' + labels[idx]);
+        t.title = pad(idx + 1) + ' · ' + labels[idx];
+        t.addEventListener('click', function () { deck.goTo(idx); });
+        ticksWrap.appendChild(t);
+        ticks.push(t);
+      })(i);
+    }
+
+    // Build overview grid.
+    var cards = [];
+    if (ovCount) ovCount.textContent = pad(total);
+    for (var j = 0; j < total; j++) {
+      (function (idx) {
+        var c = document.createElement('button');
+        c.className = 'vz-card';
+        c.type = 'button';
+        c.innerHTML = '<span class="vz-card-n">' + pad(idx + 1) + ' / ' + pad(total) + '</span>' +
+                      '<span class="vz-card-t"></span>';
+        c.querySelector('.vz-card-t').textContent = labels[idx];
+        c.addEventListener('click', function () { deck.goTo(idx); closeOv(); });
+        grid.appendChild(c);
+        cards.push(c);
+      })(j);
+    }
+
+    function sync() {
+      var t = deck.length || total;
+      var idx = deck.index || 0;
+      curEl.textContent = pad(idx + 1);
+      totEl.textContent = pad(t);
+      fill.style.width = (100 / t) * (idx + 1) + '%';
+      prevBtn.disabled = idx <= 0;
+      nextBtn.disabled = idx >= t - 1;
+      if (secN) secN.textContent = pad(idx + 1);
+      if (secLabel && labels[idx]) secLabel.textContent = labels[idx];
+      ticks.forEach(function (tk, k) {
+        tk.classList.toggle('is-current', k === idx);
+        tk.classList.toggle('is-past', k < idx);
+      });
+      cards.forEach(function (cd, k) { cd.classList.toggle('is-current', k === idx); });
+    }
+
+    prevBtn.addEventListener('click', function () { deck.prev(); });
+    nextBtn.addEventListener('click', function () { deck.next(); });
+    deck.addEventListener('slidechange', sync);
+
+    // Overview toggle.
+    function openOv() {
+      ov.classList.add('is-open');
+      ov.setAttribute('aria-hidden', 'false');
+      ovBtn.classList.add('is-on');
+      var cur = cards[deck.index || 0];
+      if (cur && cur.scrollIntoView) cur.scrollIntoView({ block: 'nearest' });
+    }
+    function closeOv() {
+      ov.classList.remove('is-open');
+      ov.setAttribute('aria-hidden', 'true');
+      ovBtn.classList.remove('is-on');
+    }
+    function toggleOv() { ov.classList.contains('is-open') ? closeOv() : openOv(); }
+    ovBtn.addEventListener('click', toggleOv);
+    ovClose.addEventListener('click', closeOv);
+    ov.addEventListener('click', function (e) { if (e.target === ov) closeOv(); });
+
+    // Fullscreen toggle.
+    function fsActive() { return document.fullscreenElement || document.webkitFullscreenElement; }
+    function toggleFs() {
+      try {
+        if (!fsActive()) {
+          var el = document.documentElement;
+          (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+        } else {
+          (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+        }
+      } catch (e) {}
+    }
+    function syncFs() { fsBtn.classList.toggle('is-fs', !!fsActive()); }
+    fsBtn.addEventListener('click', toggleFs);
+    document.addEventListener('fullscreenchange', syncFs);
+    document.addEventListener('webkitfullscreenchange', syncFs);
+
+    // Keyboard shortcuts (deck-stage owns arrows; we add F / G / Esc).
+    window.addEventListener('keydown', function (e) {
+      var k = e.key.toLowerCase();
+      if (k === 'f') { e.preventDefault(); toggleFs(); }
+      else if (k === 'g') { e.preventDefault(); toggleOv(); }
+      else if (e.key === 'Escape' && ov.classList.contains('is-open')) { e.preventDefault(); closeOv(); }
+    });
+
+    // Initial sync once slides are collected.
+    setTimeout(sync, 60);
+    setTimeout(sync, 400);
+  })();
+</script>
+
+<script>
+  /* ===== Premium experience layer ===== */
+  (function () {
+    var deck = document.querySelector('deck-stage');
+    if (!deck) return;
+    var sweep = document.getElementById('vzSweep');
+    var sections = Array.prototype.slice.call(document.querySelectorAll('deck-stage > section'));
+
+    /* ---- count-up on a numeric text node ---- */
+    function countNode(node, dur) {
+      var full = node.__vzOrig || (node.__vzOrig = node.nodeValue);
+      var m = full.match(/([\d,]+(?:\.\d+)?)/);
+      if (!m) return;
+      var target = parseFloat(m[1].replace(/,/g, ''));
+      var decimals = (m[1].split('.')[1] || '').length;
+      var pre = full.slice(0, m.index), post = full.slice(m.index + m[1].length);
+      var bigComma = target >= 1000 && decimals === 0;
+      var t0 = null;
+      function fmt(v) {
+        var s = decimals ? v.toFixed(decimals) : (bigComma ? Math.round(v).toLocaleString() : String(Math.round(v)));
+        return pre + s + post;
+      }
+      function step(ts) {
+        if (!t0) t0 = ts;
+        var p = Math.min(1, (ts - t0) / (dur || 900));
+        var e = 1 - Math.pow(1 - p, 3);
+        node.nodeValue = fmt(target * e);
+        if (p < 1) requestAnimationFrame(step); else node.nodeValue = fmt(target);
+      }
+      node.nodeValue = fmt(0);
+      requestAnimationFrame(step);
+    }
+    function firstNumNode(el) {
+      if (!el) return null;
+      for (var i = 0; i < el.childNodes.length; i++) {
+        var n = el.childNodes[i];
+        if (n.nodeType === 3 && /\d/.test(n.nodeValue)) return n;
+      }
+      return null;
+    }
+
+    /* ---- inject trajectory bars (slide 9) ---- */
+    sections.forEach(function (sec) {
+      Array.prototype.forEach.call(sec.querySelectorAll('.traj-card'), function (card) {
+        var mrr = card.querySelector('.mrr');
+        if (!mrr) return;
+        var val = parseFloat(mrr.textContent.replace(/[^\d.]/g, '')) || 0;
+        if (/m/i.test(mrr.textContent)) val = val * 1000; /* ₱1M -> 1000k */
+        var bar = document.createElement('div'); bar.className = 'vz-mbar';
+        var f = document.createElement('i'); bar.appendChild(f);
+        bar.__pct = Math.min(100, (val / 1000) * 100);
+        card.appendChild(bar);
+      });
+    });
+
+    function runCountups(sec) {
+      var fig = sec.querySelector('.cost-total .figure'); if (fig) { var n = firstNumNode(fig); if (n) countNode(n, 1000); }
+      Array.prototype.forEach.call(sec.querySelectorAll('.traj-card .mrr'), function (m) { var n = firstNumNode(m); if (n) countNode(n, 950); });
+      var eq = sec.querySelector('.equity-num'); if (eq) { var n2 = firstNumNode(eq); if (n2) countNode(n2, 850); }
+    }
+    function runBars(sec) {
+      Array.prototype.forEach.call(sec.querySelectorAll('.vz-mbar'), function (bar) {
+        var f = bar.querySelector('i'); f.style.width = '0';
+        requestAnimationFrame(function () { requestAnimationFrame(function () { f.style.width = (bar.__pct || 0) + '%'; }); });
+      });
+    }
+
+    /* ---- entrance: stagger + sweep + countups + sound ---- */
+    function onChange() {
+      var idx = deck.index || 0;
+      var sec = sections[idx];
+      sections.forEach(function (s) { s.classList.remove('vz-enter'); });
+      if (sec) { void sec.offsetWidth; sec.classList.add('vz-enter'); }
+      if (sweep) { sweep.classList.remove('is-sweep'); void sweep.offsetWidth; sweep.classList.add('is-sweep'); setTimeout(function () { sweep.classList.remove('is-sweep'); }, 700); }
+      if (sec) setTimeout(function () { runCountups(sec); runBars(sec); }, 380);
+      tick();
+      if (idx === (deck.length - 1)) setTimeout(swell, 250);
+      if (idx !== 0 && card) card.style.transform = '';
+    }
+    deck.addEventListener('slidechange', onChange);
+    setTimeout(onChange, 140);
+
+    /* ---- slide 5: Path A / B toggle ---- */
+    var pt = document.getElementById('vzPathToggle');
+    var ct = document.getElementById('vzCostTable');
+    if (pt && ct) {
+      pt.addEventListener('click', function (e) {
+        var b = e.target.closest('.vz-path'); if (!b) return;
+        Array.prototype.forEach.call(pt.children, function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+        ct.classList.remove('vz-show-a', 'vz-show-b');
+        var p = b.getAttribute('data-path');
+        if (p === 'a') ct.classList.add('vz-show-a');
+        else if (p === 'b') ct.classList.add('vz-show-b');
+      });
+    }
+
+    /* ---- slide 11: equity calculator + vesting scrub ---- */
+    var mrrEl = document.getElementById('vzMrr'), mrrOut = document.getElementById('vzMrrOut'),
+        handle = document.getElementById('vzHandle'), track = document.getElementById('vzTrack'),
+        timeFill = document.getElementById('vzTimeFill'), payout = document.getElementById('vzPayout'),
+        vestEl = document.getElementById('vzVest'),
+        nodes = Array.prototype.slice.call(document.querySelectorAll('.vz-node'));
+    if (mrrEl && track) {
+      var hp = 1;
+      function vestPct(p) { return 0.5 + 1.5 * p; }
+      function calc() {
+        var mrr = parseFloat(mrrEl.value);
+        var company = mrr * 12 * 3;
+        var vp = vestPct(hp);
+        var pay = company * (vp / 100);
+        mrrOut.innerHTML = (mrr >= 1e6 ? '₱' + (mrr / 1e6).toFixed(1) + 'M' : '₱' + Math.round(mrr / 1e3) + 'k') + '<i>&nbsp;MRR</i>';
+        vestEl.textContent = vp.toFixed(1) + '%';
+        payout.textContent = '≈ ₱' + Math.round(pay).toLocaleString();
+        timeFill.style.width = (hp * 100) + '%';
+        handle.style.left = (hp * 100) + '%';
+        nodes.forEach(function (n) { n.classList.toggle('is-reached', parseFloat(n.getAttribute('data-p')) <= hp + 0.001); });
+      }
+      var dragging = false;
+      function setFromX(x) { var r = track.getBoundingClientRect(); hp = Math.max(0, Math.min(1, (x - r.left) / r.width)); calc(); }
+      track.addEventListener('pointerdown', function (e) { dragging = true; setFromX(e.clientX); });
+      window.addEventListener('pointermove', function (e) { if (dragging) setFromX(e.clientX); });
+      window.addEventListener('pointerup', function () { dragging = false; });
+      nodes.forEach(function (n) { n.addEventListener('click', function (e) { e.stopPropagation(); hp = parseFloat(n.getAttribute('data-p')); calc(); }); });
+      mrrEl.addEventListener('input', calc);
+      handle.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowLeft') { hp = Math.max(0, hp - 0.05); calc(); e.preventDefault(); }
+        else if (e.key === 'ArrowRight') { hp = Math.min(1, hp + 0.05); calc(); e.preventDefault(); }
+      });
+      calc();
+    }
+
+    /* ---- sound design (synth, off by default) ---- */
+    var soundOn = false, actx = null, soundBtn = document.getElementById('vzSound');
+    function ctx() { if (!actx) { try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } return actx; }
+    function tick() {
+      if (!soundOn) return; var c = ctx(); if (!c) return;
+      var o = c.createOscillator(), g = c.createGain(); o.type = 'sine'; o.frequency.value = 680;
+      o.connect(g); g.connect(c.destination); var t = c.currentTime;
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.07, t + 0.005); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.13);
+      o.start(t); o.stop(t + 0.15);
+    }
+    function swell() {
+      if (!soundOn) return; var c = ctx(); if (!c) return;
+      [392, 523, 659].forEach(function (f, i) {
+        var o = c.createOscillator(), g = c.createGain(); o.type = 'sine'; o.frequency.value = f;
+        o.connect(g); g.connect(c.destination); var t = c.currentTime + i * 0.05;
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.05, t + 0.35); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.5);
+        o.start(t); o.stop(t + 1.6);
+      });
+    }
+    function toggleSound() {
+      soundOn = !soundOn; soundBtn.classList.toggle('is-on', soundOn);
+      if (soundOn) { var c = ctx(); if (c && c.state === 'suspended') c.resume(); tick(); }
+    }
+    if (soundBtn) soundBtn.addEventListener('click', toggleSound);
+
+    /* ---- present mode ---- */
+    var present = false, presentBtn = document.getElementById('vzPresent'), toast = document.getElementById('vzToast');
+    function showToast(msg) { if (!toast) return; toast.textContent = msg; toast.classList.add('is-show'); clearTimeout(toast.__t); toast.__t = setTimeout(function () { toast.classList.remove('is-show'); }, 2200); }
+    function togglePresent() {
+      present = !present;
+      document.body.classList.toggle('vz-present', present);
+      if (presentBtn) presentBtn.classList.toggle('is-on', present);
+      window.dispatchEvent(new Event('resize'));
+      showToast(present ? 'Present mode · press P to exit' : 'Present mode off');
+    }
+    if (presentBtn) presentBtn.addEventListener('click', togglePresent);
+
+    /* ---- auto-play ---- */
+    var playing = false, playBtn = document.getElementById('vzPlay'), playTimer = null, DWELL = 7000;
+    function tickPlay() { if (!playing) return; if ((deck.index || 0) >= deck.length - 1) { stopPlay(); return; } deck.next(); playTimer = setTimeout(tickPlay, DWELL); }
+    function startPlay() { playing = true; if (playBtn) playBtn.classList.add('is-playing'); if ((deck.index || 0) >= deck.length - 1) deck.goTo(0); playTimer = setTimeout(tickPlay, DWELL); showToast('Auto-play on'); }
+    function stopPlay() { playing = false; if (playBtn) playBtn.classList.remove('is-playing'); clearTimeout(playTimer); }
+    function togglePlay() { playing ? stopPlay() : startPlay(); }
+    if (playBtn) playBtn.addEventListener('click', togglePlay);
+    ['vzPrev', 'vzNext'].forEach(function (id) { var b = document.getElementById(id); if (b) b.addEventListener('click', stopPlay); });
+
+    /* ---- hover-reactive brand card (cover only) ---- */
+    var card = sections[0] && sections[0].querySelector('.brand-card');
+    if (card) {
+      card.style.transition = 'transform 0.2s ease';
+      window.addEventListener('mousemove', function (e) {
+        if ((deck.index || 0) !== 0 || present) return;
+        var rx = ((e.clientY / window.innerHeight) - 0.5) * -6;
+        var ry = ((e.clientX / window.innerWidth) - 0.5) * 8;
+        card.style.transform = 'perspective(900px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
+      });
+    }
+
+    /* ---- keys: P present, S sound ---- */
+    window.addEventListener('keydown', function (e) {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      var k = e.key.toLowerCase();
+      if (k === 'p') { e.preventDefault(); togglePresent(); }
+      else if (k === 's') { e.preventDefault(); toggleSound(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { stopPlay(); }
+    });
+  })();
+</script>
+</body>
+</html>

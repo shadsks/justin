@@ -785,15 +785,9 @@ I need the visual voice in the room before that.</div>
 
 </deck-stage>
 
-<!-- ===== Premium FX layer (boot, vignette, cursor, spine) ===== -->
+<!-- ===== Premium FX layer (boot, vignette, cursor) ===== -->
 <div class="vz-vignette" id="vzVignette" aria-hidden="true"></div>
 <div class="vz-cursor" id="vzCursor" aria-hidden="true"></div>
-
-<!-- vertical movement spine (desktop) -->
-<nav class="vz-spine" id="vzSpine" aria-label="Progress">
-  <span class="vz-spine-rail"></span>
-  <span class="vz-spine-glow" id="vzSpineGlow"></span>
-</nav>
 
 <!-- cinematic boot sequence -->
 <div class="vz-boot" id="vzBoot" role="status" aria-label="Loading">
@@ -1208,14 +1202,14 @@ I need the visual voice in the room before that.</div>
   .vz-time { padding: 14px 13px 4px; }
   .vz-time-track { position: relative; height: 4px; border-radius: 999px; background: rgba(247,247,247,0.16); }
   .vz-time-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; border-radius: 999px; background: linear-gradient(90deg, #CCFF00, #0066FF); box-shadow: 0 0 10px rgba(204,255,0,0.5); transition: width 0.18s ease; }
-  .vz-node {
+  .vz-time-track .vz-node {
     -webkit-appearance: none; appearance: none; position: absolute; top: 50%; transform: translate(-50%,-50%);
     background: none; border: 0; cursor: pointer; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 0;
   }
-  .vz-node i { width: 12px; height: 12px; border-radius: 50%; background: #1a1a1a; border: 2px solid rgba(247,247,247,0.4); transition: all 0.2s ease; }
-  .vz-node span { position: absolute; top: 16px; font-family: "JetBrains Mono", monospace; font-size: 13px; letter-spacing: 0.05em; color: rgba(247,247,247,0.45); white-space: nowrap; }
-  .vz-node.is-reached i { background: var(--neon); border-color: var(--neon); }
-  .vz-node.is-reached span { color: rgba(247,247,247,0.7); }
+  .vz-time-track .vz-node i { width: 12px; height: 12px; border-radius: 50%; background: #1a1a1a; border: 2px solid rgba(247,247,247,0.4); transition: all 0.2s ease; }
+  .vz-time-track .vz-node span { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); font-family: "JetBrains Mono", monospace; font-size: 13px; letter-spacing: 0.05em; color: rgba(247,247,247,0.45); white-space: nowrap; text-align: center; }
+  .vz-time-track .vz-node.is-reached i { background: var(--neon); border-color: var(--neon); }
+  .vz-time-track .vz-node.is-reached span { color: rgba(247,247,247,0.7); }
   .vz-handle {
     position: absolute; top: 50%; left: 100%; transform: translate(-50%,-50%);
     width: 24px; height: 24px; border-radius: 50%; background: #F7F7F7; border: 4px solid #0B0B0B;
@@ -1243,7 +1237,7 @@ I need the visual voice in the room before that.</div>
 
 <style>
   /* =====================================================================
-     PREMIUM FX LAYER — boot, cursor, vignette, spine, seal, flicker
+     PREMIUM FX LAYER — boot, cursor, vignette, seal, flicker
      All desktop enhancements degrade gracefully on touch / mobile.
      ===================================================================== */
 
@@ -1307,56 +1301,6 @@ I need the visual voice in the room before that.</div>
     }
     .vz-cursor.is-down { transform: translate3d(var(--cx,0), var(--cy,0), 0) scale(0.82); }
   }
-
-  /* ---------- vertical movement spine (right edge, desktop) ---------- */
-  .vz-spine {
-    position: fixed; right: 30px; top: 50%; transform: translateY(-50%);
-    z-index: 2147482000;
-    display: flex; flex-direction: column; align-items: center;
-    width: 22px;
-    opacity: 0; transition: opacity .5s ease .2s;
-  }
-  body.vz-booted .vz-spine { opacity: 1; }
-  .vz-spine-rail {
-    position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; margin-left: -0.5px;
-    background: rgba(247,247,247,0.14);
-  }
-  .vz-spine-glow {
-    position: absolute; left: 50%; top: 0; width: 2px; margin-left: -1px;
-    background: linear-gradient(180deg, #CCFF00, #0066FF);
-    box-shadow: 0 0 10px rgba(204,255,0,0.6);
-    height: 0; transition: height .5s cubic-bezier(0.22,1,0.36,1);
-    border-radius: 2px;
-  }
-  .vz-node {
-    -webkit-appearance: none; appearance: none; border: 0; padding: 0; margin: 0;
-    background: transparent; cursor: pointer;
-    position: relative; z-index: 1;
-    width: 22px; height: 26px; display: grid; place-items: center;
-  }
-  .vz-node i {
-    display: block; width: 6px; height: 6px; border-radius: 50%;
-    background: rgba(247,247,247,0.28);
-    transition: transform .3s cubic-bezier(0.22,1,0.36,1), background .3s ease, box-shadow .3s ease;
-  }
-  .vz-node:hover i { transform: scale(1.5); background: rgba(247,247,247,0.7); }
-  .vz-node.is-past i { background: rgba(204,255,0,0.5); }
-  .vz-node.is-current i {
-    transform: scale(1.9); background: #CCFF00;
-    box-shadow: 0 0 12px rgba(204,255,0,0.95);
-  }
-  .vz-node .vz-node-lbl {
-    position: absolute; right: 28px; top: 50%; transform: translateY(-50%) translateX(6px);
-    white-space: nowrap; font-family: "JetBrains Mono", monospace; font-size: 11px;
-    letter-spacing: 0.14em; text-transform: uppercase; color: rgba(247,247,247,0.82);
-    background: rgba(8,8,8,0.92); border: 1px solid rgba(247,247,247,0.12);
-    padding: 6px 10px; border-radius: 8px; opacity: 0; pointer-events: none;
-    transition: opacity .2s ease, transform .2s ease;
-  }
-  .vz-node:hover .vz-node-lbl { opacity: 1; transform: translateY(-50%) translateX(0); }
-  body.vz-present .vz-spine { opacity: 0 !important; pointer-events: none; }
-  @media (max-width: 1100px), (max-height: 620px) { .vz-spine { display: none; } }
-  @media print { .vz-spine { display: none !important; } }
 
   /* ---------- "what changes for you" toggle (slide 5) ---------- */
   .vz-pathtoggle[data-mode="changes"] { align-items: center; gap: 10px; }
@@ -1733,7 +1677,7 @@ I need the visual voice in the room before that.</div>
         handle = document.getElementById('vzHandle'), track = document.getElementById('vzTrack'),
         timeFill = document.getElementById('vzTimeFill'), payout = document.getElementById('vzPayout'),
         vestEl = document.getElementById('vzVest'),
-        nodes = Array.prototype.slice.call(document.querySelectorAll('.vz-node'));
+        nodes = Array.prototype.slice.call(track.querySelectorAll('.vz-node'));
     if (mrrEl && track) {
       var hp = 1;
       function vestPct(p) { return 0.5 + 1.5 * p; }

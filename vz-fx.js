@@ -1,5 +1,5 @@
 /* =========================================================================
-   Vyzee premium FX — boot, cursor, magnetism, parallax, spine, micro-pulses.
+   Vyzee premium FX — boot, cursor, magnetism, parallax, micro-pulses.
    Pure progressive enhancement: every block guards for touch / reduced-motion
    and no-ops if its target isn't present. Slide transitions themselves are
    handled in CSS (.vz-enter dissolve) so they cover keyboard nav too.
@@ -103,35 +103,6 @@
     }, { passive: true });
   }
 
-  /* --------------------------------------------------------- MOVEMENT SPINE */
-  var spine = document.getElementById('vzSpine');
-  var spineGlow = document.getElementById('vzSpineGlow');
-  var nodes = [];
-  if (spine && sections.length) {
-    var labels = sections.map(function (s, i) {
-      var raw = (s.getAttribute('data-label') || ('Slide ' + (i + 1))).trim();
-      var m = raw.match(/^\d+\s+(.*)$/); return m ? m[1] : raw;
-    });
-    sections.forEach(function (s, i) {
-      var n = document.createElement('button');
-      n.className = 'vz-node'; n.type = 'button';
-      n.setAttribute('aria-label', 'Go to ' + labels[i]);
-      n.innerHTML = '<i></i><span class="vz-node-lbl">' + String(i + 1).padStart(2, '0') + ' · ' + labels[i] + '</span>';
-      n.addEventListener('click', function () { if (deck) deck.goTo(i); });
-      spine.appendChild(n); nodes.push(n);
-    });
-  }
-  function syncSpine(idx) {
-    if (!nodes.length) return;
-    nodes.forEach(function (n, k) {
-      n.classList.toggle('is-current', k === idx);
-      n.classList.toggle('is-past', k < idx);
-    });
-    if (spineGlow && nodes.length > 1) {
-      spineGlow.style.height = (idx / (nodes.length - 1) * 100) + '%';
-    }
-  }
-
   /* ----------------------------------------- "WHAT CHANGES" NUMBER PULSE */
   var toggle = document.getElementById('vzPathToggle');
   var costTable = document.getElementById('vzCostTable');
@@ -170,7 +141,6 @@
   /* -------------------------------------------------------- ON SLIDE CHANGE */
   function onChange() {
     var idx = deck ? (deck.index || 0) : 0;
-    syncSpine(idx);
     pickHero(idx);
   }
   if (deck) {
